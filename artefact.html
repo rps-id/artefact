@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Artefact</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0608;--red:#b3122b;--gold:#f5c451;--card:#1a0f13;--tx:#f6ece4;--mu:#a8968f;--ln:#3a2229}
+*{box-sizing:border-box;margin:0}
+[hidden]{display:none!important}
+body{font:15px/1.5 'DM Sans',sans-serif;background:radial-gradient(ellipse 80% 50% at 50% -10%,#5a1626,transparent 70%),var(--bg);color:var(--tx);min-height:100vh}
+body::before,body::after{content:"";position:fixed;top:0;bottom:0;width:3.5vw;background:repeating-linear-gradient(90deg,#6d0b1b 0 8px,#a3142f 8px 16px);box-shadow:0 0 30px #000;z-index:1;pointer-events:none}
+body::before{left:0}body::after{right:0}
+header{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:10px 6vw;background:#0b0608ee;backdrop-filter:blur(8px);border-bottom:1px solid var(--ln)}
+.logo{font:30px 'Bebas Neue';letter-spacing:5px;color:var(--gold);text-decoration:none}
+main{padding:0 6vw 60px;position:relative}
+.bulbs{height:14px;background:radial-gradient(circle,var(--gold) 3px,transparent 4px) 0 0/28px 14px repeat-x;filter:drop-shadow(0 0 4px var(--gold));animation:bl 2.4s steps(2) infinite}
+@keyframes bl{50%{opacity:.45}}
+@media(prefers-reduced-motion:reduce){.bulbs{animation:none}}
+.hero{text-align:center;padding:44px 0 30px}
+.hero h1{font:clamp(64px,14vw,150px)/.9 'Bebas Neue';letter-spacing:8px;background:linear-gradient(#fff3c4,#e0a52a);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 4px 24px #b3122b99)}
+.hero p{color:var(--mu);margin-top:12px}
+.rooms{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:24px}
+.ticket{background:var(--card);border:1px solid var(--ln);border-radius:14px;overflow:hidden;transition:transform .25s,box-shadow .25s}
+.ticket:hover{transform:translateY(-6px);box-shadow:0 14px 40px #b3122b55}
+.poster{display:flex;flex-direction:column;justify-content:flex-end;aspect-ratio:4/5;padding:16px;color:inherit;text-decoration:none;background:linear-gradient(to top,#000e,#0002 65%),var(--img) center/cover,linear-gradient(135deg,#5a0f1d,#1a0f13);position:relative}
+.poster h3{font:32px/1 'Bebas Neue';letter-spacing:2px}
+.poster p{font-size:13px;color:#ddd;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.adm{position:absolute;top:12px;left:12px;border:1px dashed var(--gold);color:var(--gold);font-size:11px;padding:2px 8px;border-radius:4px;transform:rotate(-4deg)}
+.tb{display:flex;gap:6px;flex-wrap:wrap;padding:10px}
+.btn{background:#2a1a20;color:var(--tx);border:1px solid var(--ln);padding:8px 14px;border-radius:999px;cursor:pointer;font:inherit;font-weight:500;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--gold)}
+.btn.gold{background:linear-gradient(#ffd877,#e0a52a);color:#2a1500;border:0;font-weight:700}
+.btn:disabled{opacity:.5}
+.ic{background:#0007;border:0;color:#fff;border-radius:8px;padding:4px 8px;cursor:pointer}
+.empty{color:var(--mu);padding:30px;text-align:center}
+.rhead{margin:22px 0;padding:44px 28px;border-radius:18px;background:linear-gradient(#000a,#000e),var(--img) center/cover,#2a0f18;border:1px solid var(--ln)}
+.rhead h1{font:clamp(40px,7vw,72px)/1 'Bebas Neue';letter-spacing:3px;color:var(--gold)}
+.rhead p{color:#ddd;max-width:600px;margin:6px 0 16px}
+.back{color:var(--mu);text-decoration:none;font-size:13px}
+.acts{display:flex;gap:8px;flex-wrap:wrap}
+.wall{columns:260px;column-gap:18px}
+.pc{break-inside:avoid;margin-bottom:18px;background:var(--card);border:1px solid var(--ln);border-radius:14px;overflow:hidden;cursor:pointer;transition:.2s}
+.pc:hover{border-color:var(--gold);transform:scale(1.02)}
+.th{aspect-ratio:16/10;background:linear-gradient(135deg,#3b0d1a,#161016) center/cover;display:grid;place-items:center;position:relative}
+.th.tt,.th.ig{aspect-ratio:4/5}
+.play{width:54px;height:54px;border-radius:50%;background:#000a;border:2px solid var(--gold);display:grid;place-items:center;font-size:22px;color:var(--gold)}
+.tag{position:absolute;top:8px;left:8px;font-size:11px;background:var(--red);padding:2px 8px;border-radius:6px}
+.pb{padding:12px}.pb h4{font-size:16px}
+.pb p{color:var(--mu);font-size:13px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.by{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;color:var(--mu)}
+.by i,.cmt i{width:28px;height:28px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;font-style:normal}
+.by .ic{margin-left:auto}
+#stage{position:fixed;inset:0;z-index:50;background:radial-gradient(ellipse at 40% 0,#4a1020,#050203 70%);display:flex;overflow:auto}
+.scr{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:56px 70px 20px;min-width:0;position:relative}
+.screen{width:min(100%,calc(70vh*var(--r,1.78)));aspect-ratio:var(--r,1.78);border:3px solid var(--gold);border-radius:10px;box-shadow:0 0 60px #f5c45155,0 0 0 8px #000;background:#000;overflow:hidden;display:grid;place-items:center}
+iframe{width:100%;height:100%;border:0}
+.meta{margin-top:20px;text-align:center;max-width:700px}
+.meta p{color:var(--mu)}
+.meta a{color:var(--gold)}
+.nav{position:absolute;top:45%;width:46px;height:46px;border-radius:50%;border:1px solid var(--gold);background:#000a;color:var(--gold);font-size:26px;cursor:pointer}
+.nav.l{left:12px}.nav.r{right:12px}
+.x{position:fixed;top:12px;right:14px;z-index:60;width:40px;height:40px;border-radius:50%;border:0;background:var(--red);color:#fff;font-size:18px;cursor:pointer}
+.cm{width:340px;flex-shrink:0;background:#0d0709ee;border-left:1px solid var(--ln);display:flex;flex-direction:column;padding:56px 16px 16px}
+.cm h3{font:22px 'Bebas Neue';letter-spacing:2px;color:var(--gold);margin-bottom:10px}
+#clist{flex:1;overflow:auto;display:flex;flex-direction:column;gap:12px;margin-bottom:12px;min-height:80px}
+.cmt{display:flex;gap:10px;align-items:flex-start}.cmt p{font-size:14px;word-break:break-word}.cmt small{color:var(--mu)}
+.cmt .ic{margin-left:auto}
+@media(max-width:860px){body::before,body::after{width:2vw}#stage{flex-direction:column}.scr{padding:56px 14px 10px;flex:none}.cm{width:auto;border:0;padding-top:10px}.nav{top:35%}.nav.l{left:2px}.nav.r{right:2px}}
+#modal{position:fixed;inset:0;background:#000b;z-index:80;display:grid;place-items:center;padding:16px}
+.box{background:var(--card);border:1px solid var(--gold);border-radius:16px;padding:22px;width:min(440px,100%);max-height:90vh;overflow:auto}
+.box h3{font:26px 'Bebas Neue';letter-spacing:2px;color:var(--gold)}
+label{display:block;margin:10px 0;font-size:13px;color:var(--mu)}
+input,select,textarea{width:100%;margin-top:4px;padding:9px 11px;background:var(--bg);border:1px solid var(--ln);border-radius:8px;color:var(--tx);font:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.st{color:var(--gold);font-size:13px;margin-top:8px;min-height:18px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--gold);color:#2a1500;padding:10px 18px;border-radius:999px;z-index:100;font-weight:700}
+</style>
+</head>
+<body>
+<header><a class="logo" href="#/">Artefact</a><button class="btn" id="adm" data-a="admin">🔒 Admin</button></header>
+<div class="bulbs"></div>
+<main id="app"></main>
+
+<div id="stage" hidden>
+ <button class="x" data-a="close" aria-label="Tutup">✕</button>
+ <div class="scr">
+  <button class="nav l" data-a="prev" aria-label="Sebelumnya">‹</button>
+  <div class="screen" id="screen"></div>
+  <button class="nav r" data-a="next" aria-label="Berikutnya">›</button>
+  <div class="meta" id="meta"></div>
+ </div>
+ <aside class="cm">
+  <h3>Komentar</h3>
+  <div id="clist"></div>
+  <form id="cf">
+   <input name="name" placeholder="Namamu (wajib diisi)" maxlength="30" required>
+   <textarea name="text" rows="2" placeholder="Tulis komentar…" maxlength="300" style="margin:8px 0"></textarea>
+   <button class="btn gold">Kirim komentar</button>
+   <p class="st"></p>
+  </form>
+ </aside>
+</div>
+<div id="modal" hidden><div class="box" id="box"></div></div>
+<div id="toast" hidden></div>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {getFirestore,collection,doc,addDoc,setDoc,getDoc,getDocs,updateDoc,deleteDoc,onSnapshot,query,where} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const db=getFirestore(initializeApp({
+  apiKey:"AIzaSyCLVvWdZu7tpwy-IIA93wYaOhmzdurzric",authDomain:"artefact-735d7.firebaseapp.com",
+  projectId:"artefact-735d7",storageBucket:"artefact-735d7.firebasestorage.app",
+  messagingSenderId:"315072822756",appId:"1:315072822756:web:4583bcb82c40570aa61bf1"}));
+const CLOUD="di6fkvi5",PRESET="artefact",DEFAULT_PW="42013";
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const EM=[..."🦊🐼🐨🦁🐯🐸🐙🦄🐲🦉🐧🦋🐳🦖🐝🦔🐰🐻🦒🦩🐢🦜🐬🦥"];
+const hs=s=>[...s.toLowerCase().trim()].reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,7);
+const em=n=>EM[hs(n)%EM.length],col=n=>`hsl(${hs(n)%360} 60% 32%)`;
+const when=t=>new Date(t).toLocaleString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+const sha=async s=>crypto.subtle?[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)))].map(b=>b.toString(16).padStart(2,'0')).join(''):s;
+const toast=m=>{const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(t._t);t._t=setTimeout(()=>t.hidden=true,2400)};
+const modal=h=>{$('#box').innerHTML=h;$('#modal').hidden=false};
+const closeModal=()=>$('#modal').hidden=true;
+
+let rooms=[],posts=[],curRoom=null,fi=0,sid=null,uPosts=null,uCom=null;
+let admin=sessionStorage.af_admin==='1',myName=localStorage.af_name||'';
+const TAG={yt:'YouTube',tt:'TikTok',ig:'Instagram',pdf:'Dokumen',ppt:'Presentasi',link:'Link'};
+const ICON={yt:'▶',tt:'♪',ig:'◎',pdf:'📄',ppt:'📊',link:'🔗'};
+
+async function up(file){
+  const f=new FormData();f.append('file',file);f.append('upload_preset',PRESET);
+  const r=await fetch(`https://api.cloudinary.com/v1_1/${CLOUD}/auto/upload`,{method:'POST',body:f});
+  if(!r.ok)throw Error('Upload gagal. Cek ukuran file (maks 10 MB) dan preset Cloudinary.');
+  return (await r.json()).secure_url;
+}
+
+function media(p){
+  const u=p.url||'',R=(t,src,r,th)=>({t,src,r:r||1.78,th});let m;
+  if(p.kind==='pdf')return R('pdf',`https://docs.google.com/gview?url=${encodeURIComponent(u)}&embedded=true`,1.33);
+  if(p.kind==='ppt')return R('ppt',`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(u)}`);
+  if(m=u.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/))([\w-]{11})/))
+    return R('yt',`https://www.youtube.com/embed/${m[1]}?rel=0`,m[0].includes('shorts')?.5625:1.78,`https://img.youtube.com/vi/${m[1]}/hqdefault.jpg`);
+  if(m=u.match(/tiktok\.com\/.*\/video\/(\d+)/))return R('tt',`https://www.tiktok.com/embed/v2/${m[1]}`,.5625);
+  if(m=u.match(/instagram\.com\/(?:[\w.]+\/)?(p|reels?|tv)\/([\w-]+)/))return R('ig',`https://www.instagram.com/${m[1]==='reels'?'reel':m[1]}/${m[2]}/embed`,.6);
+  if(m=u.match(/drive\.google\.com\/file\/d\/([^/]+)/))return R('pdf',`https://drive.google.com/file/d/${m[1]}/preview`);
+  if(m=u.match(/docs\.google\.com\/(presentation|document)\/d\/([^/]+)/))return R('ppt',`https://docs.google.com/${m[1]}/d/${m[2]}/embed`);
+  return R('link','');
+}
+
+/* ---------- data ---------- */
+onSnapshot(collection(db,'rooms'),s=>{
+  rooms=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.created||0)-(a.created||0));route();
+},e=>{$('#app').innerHTML='<p class="empty">Gagal memuat data. Pastikan Firestore sudah dibuat dan aturan (rules) mengizinkan baca/tulis.</p>'});
+
+function route(){
+  const m=location.hash.match(/^#\/r\/(\w+)/);
+  if(m){
+    if(curRoom!==m[1]){
+      curRoom=m[1];uPosts&&uPosts();posts=[];
+      uPosts=onSnapshot(query(collection(db,'posts'),where('roomId','==',curRoom)),s=>{
+        posts=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>b.created-a.created);renderRoom();syncStage();
+      });
+    }
+    renderRoom();
+  }else{curRoom=null;uPosts&&uPosts();uPosts=null;renderHome()}
+}
+window.onhashchange=()=>{closeStage();route()};
+
+/* ---------- views ---------- */
+const ticket=r=>`<article class="ticket"><a class="poster" href="#/r/${r.id}" style="--img:url('${esc(r.cover||'')}')"><span class="adm">Admit one</span><h3>${esc(r.name)}</h3><p>${esc(r.desc||'')}</p></a>
+<div class="tb"><a class="btn" href="#/r/${r.id}">▶ Tonton</a><button class="btn gold" data-a="up" data-id="${r.id}">＋ Kirim karya</button>
+${admin?`<button class="ic" data-a="copy" data-id="${r.id}" title="Salin link">🔗</button><button class="ic" data-a="editroom" data-id="${r.id}" title="Edit">⚙</button><button class="ic" data-a="delroom" data-id="${r.id}" title="Hapus">🗑</button>`:''}</div></article>`;
+
+function renderHome(){
+  $('#app').innerHTML=`<section class="hero"><h1>Artefact</h1><p>Panggung karya siswa. Pilih room, kirim projectmu, lalu tonton karya teman-temanmu.</p></section>
+  <div class="rooms">${rooms.map(ticket).join('')||'<p class="empty">Belum ada room. Admin dapat membuatnya lewat tombol Admin di pojok kanan atas.</p>'}</div>`;
+}
+
+function pcard(p,i){
+  const m=media(p);
+  return `<article class="pc" data-a="focus" data-i="${i}"><div class="th ${m.t}" ${m.th?`style="background-image:url('${m.th}')"`:''}><span class="play">${ICON[m.t]}</span><b class="tag">${TAG[m.t]}</b></div>
+  <div class="pb"><h4>${esc(p.title)}</h4>${p.caption?`<p>${esc(p.caption)}</p>`:''}
+  <div class="by"><i style="background:${col(p.name)}">${em(p.name)}</i>${esc(p.name)}${admin?`<button class="ic" data-a="delpost" data-id="${p.id}" title="Hapus karya">🗑</button>`:''}</div></div></article>`;
+}
+
+function renderRoom(){
+  const r=rooms.find(x=>x.id===curRoom);
+  if(!r){$('#app').innerHTML='<p class="empty">Memuat room…</p>';return}
+  $('#app').innerHTML=`<section class="rhead" style="--img:url('${esc(r.cover||'')}')"><a class="back" href="#/">← Semua room</a><h1>${esc(r.name)}</h1><p>${esc(r.desc||'')}</p>
+  <div class="acts"><button class="btn gold" data-a="up" data-id="${r.id}">＋ Kirim karya</button><button class="btn" data-a="focus" data-i="0">🎬 Mode fokus</button><button class="btn" data-a="copy">🔗 Salin link room</button></div></section>
+  <div class="wall">${posts.map(pcard).join('')||'<p class="empty">Belum ada karya. Jadilah yang pertama mengirim!</p>'}</div>`;
+}
+
+/* ---------- stage (mode fokus) ---------- */
+function openStage(i){
+  fi=i;$('#stage').hidden=false;document.body.style.overflow='hidden';
+  $('#cf [name=name]').value=myName;renderStage();
+}
+function closeStage(){
+  uCom&&uCom();uCom=null;sid=null;$('#screen').innerHTML='';$('#stage').hidden=true;document.body.style.overflow='';
+}
+function syncStage(){
+  if($('#stage').hidden)return;
+  const i=posts.findIndex(p=>p.id===sid);
+  if(i<0)return closeStage();
+  fi=i;
+}
+function renderStage(){
+  const p=posts[fi];if(!p)return closeStage();
+  sid=p.id;const m=media(p),s=$('#screen');
+  s.style.setProperty('--r',m.r);
+  s.innerHTML=m.src?`<iframe src="${esc(m.src)}" allow="autoplay;encrypted-media;fullscreen;picture-in-picture" allowfullscreen></iframe>`
+   :`<div style="padding:20px;text-align:center"><p style="margin-bottom:12px">Link ini tidak bisa diputar langsung di sini.</p><a class="btn gold" target="_blank" rel="noopener" href="${esc(p.url)}">Buka link ↗</a></div>`;
+  $('#meta').innerHTML=`<h2>${esc(p.title)}</h2>${p.caption?`<p>${esc(p.caption)}</p>`:''}
+  <div class="by" style="justify-content:center"><i style="background:${col(p.name)}">${em(p.name)}</i>${esc(p.name)} · ${fi+1}/${posts.length} · <a target="_blank" rel="noopener" href="${esc(p.url)}">Buka asli ↗</a></div>`;
+  uCom&&uCom();
+  uCom=onSnapshot(query(collection(db,'comments'),where('postId','==',p.id)),s=>{
+    const l=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>a.created-b.created),c=$('#clist');
+    c.innerHTML=l.map(x=>`<div class="cmt"><i style="background:${col(x.name)}">${em(x.name)}</i><div><b>${esc(x.name)}</b> <small>${when(x.created)}</small><p>${esc(x.text)}</p></div>${admin?`<button class="ic" data-a="delcom" data-id="${x.id}">🗑</button>`:''}</div>`).join('')||'<p class="empty">Belum ada komentar.</p>';
+    c.scrollTop=1e9;
+  });
+}
+const step=d=>{if(!posts.length)return;fi=(fi+d+posts.length)%posts.length;renderStage()};
+
+/* ---------- modals ---------- */
+const upModal=rid=>modal(`<h3>Kirim karya</h3><form id="uf" data-rid="${rid}">
+<label>Nama<input name="name" required maxlength="30" value="${esc(myName)}"></label>
+<label>Judul project<input name="title" required maxlength="80"></label>
+<label>Caption<textarea name="cap" rows="2" maxlength="300"></textarea></label>
+<label>Jenis<select name="k"><option value="file">File PDF / PPT</option><option value="link">Link video (YouTube, TikTok, Instagram)</option></select></label>
+<label class="fg">File (maks 10 MB)<input type="file" name="f" accept=".pdf,.ppt,.pptx"></label>
+<label class="lg" hidden>Link<input name="u" placeholder="https://"></label>
+<div class="row"><button class="btn gold">Kirim</button><button type="button" class="btn" data-a="cm">Batal</button></div><p class="st"></p></form>`);
+
+const roomModal=r=>modal(`<h3>${r?'Edit':'Buat'} room</h3><form id="rf"><input type="hidden" name="rid" value="${r?r.id:''}">
+<label>Nama room<input name="name" required maxlength="60" value="${esc(r?.name)}"></label>
+<label>Deskripsi / instruksi tugas<textarea name="desc" rows="3" maxlength="300">${esc(r?.desc)}</textarea></label>
+<label>Gambar sampul${r?' (kosongkan jika tidak diganti)':''}<input type="file" name="cover" accept="image/*"></label>
+<div class="row"><button class="btn gold">Simpan</button><button type="button" class="btn" data-a="cm">Batal</button></div><p class="st"></p></form>`);
+
+function adminModal(){
+  if(!admin)return modal(`<h3>Masuk admin</h3><form id="lf"><label>Password<input type="password" name="pw" required autofocus></label>
+  <div class="row"><button class="btn gold">Masuk</button><button type="button" class="btn" data-a="cm">Batal</button></div><p class="st"></p></form>`);
+  modal(`<h3>Panel admin</h3><div class="row" style="flex-direction:column"><button class="btn gold" data-a="newroom">＋ Buat room baru</button><button class="btn" data-a="pw">🔑 Ganti password</button><button class="btn" data-a="logout">Keluar admin</button><button class="btn" data-a="cm">Tutup</button></div>`);
+}
+
+const adminUI=()=>{$('#adm').textContent=admin?'⚙ Admin':'🔒 Admin';curRoom?renderRoom():renderHome();if(!$('#stage').hidden)renderStage()};
+
+async function delPost(id){
+  (await getDocs(query(collection(db,'comments'),where('postId','==',id)))).forEach(d=>deleteDoc(d.ref));
+  await deleteDoc(doc(db,'posts',id));
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click',async e=>{
+  if(e.target.id==='modal')return closeModal();
+  const t=e.target.closest('[data-a]');if(!t)return;
+  const {a,id,i}=t.dataset;
+  try{
+    if(a==='up')upModal(id);
+    else if(a==='cm')closeModal();
+    else if(a==='copy')navigator.clipboard.writeText(location.href.split('#')[0]+'#/r/'+(id||curRoom)).then(()=>toast('Link room disalin'));
+    else if(a==='focus'){if(!posts.length)return toast('Belum ada karya');openStage(+i)}
+    else if(a==='close')closeStage();
+    else if(a==='prev')step(-1);
+    else if(a==='next')step(1);
+    else if(a==='admin')adminModal();
+    else if(a==='newroom')roomModal();
+    else if(a==='editroom')roomModal(rooms.find(r=>r.id===id));
+    else if(a==='pw')modal(`<h3>Ganti password</h3><form id="pf"><label>Password baru (min. 4 karakter)<input name="np" required minlength="4"></label><div class="row"><button class="btn gold">Simpan</button><button type="button" class="btn" data-a="cm">Batal</button></div><p class="st"></p></form>`);
+    else if(a==='logout'){admin=false;delete sessionStorage.af_admin;closeModal();adminUI()}
+    else if(a==='delpost'&&confirm('Hapus karya ini beserta komentarnya?')){await delPost(id);toast('Karya dihapus')}
+    else if(a==='delcom'&&confirm('Hapus komentar ini?'))await deleteDoc(doc(db,'comments',id));
+    else if(a==='delroom'&&confirm('Hapus room ini beserta seluruh isinya?')){
+      showBusy();
+      (await getDocs(query(collection(db,'posts'),where('roomId','==',id)))).forEach(d=>delPost(d.id));
+      await deleteDoc(doc(db,'rooms',id));toast('Room dihapus');
+    }
+  }catch(er){toast(er.message)}
+});
+const showBusy=()=>toast('Menghapus…');
+
+document.addEventListener('change',e=>{
+  if(e.target.name!=='k')return;
+  const l=e.target.value==='link',f=e.target.form;
+  f.querySelector('.fg').hidden=l;f.querySelector('.lg').hidden=!l;
+});
+
+document.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const f=e.target,fd=new FormData(f),st=f.querySelector('.st'),b=f.querySelector('.gold');
+  try{
+    b.disabled=true;
+    if(f.id==='uf'){
+      const name=fd.get('name').trim();let kind,url;
+      if(fd.get('k')==='file'){
+        const file=fd.get('f');if(!file.size)throw Error('Pilih file dulu.');
+        const ext=file.name.split('.').pop().toLowerCase();
+        if(!['pdf','ppt','pptx'].includes(ext))throw Error('Hanya file PDF, PPT, atau PPTX.');
+        if(file.size>10*1048576)throw Error('Ukuran file maksimal 10 MB.');
+        st.textContent='Mengunggah…';url=await up(file);kind=ext==='pdf'?'pdf':'ppt';
+      }else{
+        url=fd.get('u').trim();if(!/^https?:\/\//.test(url))throw Error('Link harus diawali https://');kind='link';
+      }
+      myName=name;localStorage.af_name=name;
+      await addDoc(collection(db,'posts'),{roomId:f.dataset.rid,name,title:fd.get('title').trim(),caption:fd.get('cap').trim(),kind,url,created:Date.now()});
+      closeModal();toast('Karya terkirim!');
+      if(curRoom!==f.dataset.rid)location.hash='#/r/'+f.dataset.rid;
+    }else if(f.id==='rf'){
+      const data={name:fd.get('name').trim(),desc:fd.get('desc').trim()},file=fd.get('cover'),rid=fd.get('rid');
+      if(file.size){st.textContent='Mengunggah sampul…';data.cover=await up(file)}
+      rid?await updateDoc(doc(db,'rooms',rid),data):await addDoc(collection(db,'rooms'),{...data,cover:data.cover||'',created:Date.now()});
+      closeModal();toast('Room tersimpan');
+    }else if(f.id==='lf'){
+      const d=await getDoc(doc(db,'config','admin')),h=d.exists()?d.data().h:await sha(DEFAULT_PW);
+      if(await sha(fd.get('pw'))!==h)throw Error('Password salah.');
+      admin=true;sessionStorage.af_admin='1';closeModal();adminUI();toast('Masuk sebagai admin');
+    }else if(f.id==='pf'){
+      await setDoc(doc(db,'config','admin'),{h:await sha(fd.get('np'))});closeModal();toast('Password diganti');
+    }else if(f.id==='cf'){
+      const name=fd.get('name').trim(),text=fd.get('text').trim();
+      if(!name)throw Error('Isi namamu dulu.');if(!text)return;
+      myName=name;localStorage.af_name=name;
+      await addDoc(collection(db,'comments'),{postId:sid,roomId:curRoom,name,text,created:Date.now()});
+      f.elements.text.value='';st.textContent='';
+    }
+  }catch(er){st.textContent=er.message}
+  b.disabled=false;
+});
+
+document.addEventListener('keydown',e=>{
+  if($('#stage').hidden)return;
+  if(e.key==='Escape')closeStage();
+  if(e.target.matches('input,textarea'))return;
+  if(e.key==='ArrowRight')step(1);
+  if(e.key==='ArrowLeft')step(-1);
+});
+
+adminUI();
+</script>
+</body>
+</html>
