@@ -4,84 +4,112 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Artefact</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&family=Orbitron:wght@700&family=Playfair+Display:wght@700&family=Audiowide&family=Fredoka:wght@600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
-:root{--bg:#0b0608;--red:#b3122b;--gold:#f5c451;--card:#1a0f13;--tx:#f6ece4;--mu:#a8968f;--ln:#3a2229}
+:root,body[data-theme=bioskop]{--bg:#0b0608;--a:#f5c451;--a2:#b3122b;--card:#1a0f13;--tx:#f6ece4;--mu:#a8968f;--ln:#3a2229;--hd:#0b0608ee;--hf:'Bebas Neue',sans-serif;--abtn:linear-gradient(#ffd877,#e0a52a);--on:#2a1500;--hl:#f5c451;--glow:#b3122b88;--spot:#5a1626;--stg:#4a1020;--h1:linear-gradient(#fff3c4,#e0a52a)}
+body[data-theme=neon]{--bg:#07051a;--a:#00f0ff;--a2:#ff2bd6;--card:#120d2e;--tx:#eeeeff;--mu:#9a96c8;--ln:#2c2766;--hd:#07051aee;--hf:'Orbitron',sans-serif;--abtn:linear-gradient(90deg,#00f0ff,#7a5cff);--on:#05051a;--hl:#00f0ff;--glow:#ff2bd677;--spot:#3a0e6b;--stg:#3a0e6b;--h1:linear-gradient(#aefaff,#ff2bd6)}
+body[data-theme=galeri]{--bg:#f1ede4;--a:#1b1b1b;--a2:#8a6d3b;--card:#ffffff;--tx:#1b1b1b;--mu:#6b665c;--ln:#d8d0bf;--hd:#f1ede4ee;--hf:'Playfair Display',serif;--abtn:#1b1b1b;--on:#ffffff;--hl:#ffffff;--glow:#00000044;--spot:#ffffff;--stg:#4a4338;--h1:linear-gradient(#1b1b1b,#6b5a3a)}
+body[data-theme=angkasa]{--bg:#04060f;--a:#8ab4ff;--a2:#6a4cff;--card:#0c1124;--tx:#e8ecff;--mu:#8e98c4;--ln:#1f2a55;--hd:#04060fee;--hf:'Audiowide',sans-serif;--abtn:linear-gradient(90deg,#8ab4ff,#b79bff);--on:#05081a;--hl:#a9c7ff;--glow:#6a4cff77;--spot:#16225a;--stg:#1b2a6b;--h1:linear-gradient(#ffffff,#8ab4ff)}
+body[data-theme=alam]{--bg:#07130d;--a:#b5e86a;--a2:#2f7d4f;--card:#0f2217;--tx:#eaf5e4;--mu:#93ad9a;--ln:#21402d;--hd:#07130dee;--hf:'Fredoka',sans-serif;--abtn:linear-gradient(#cdf58a,#8fd14f);--on:#0b2410;--hl:#cdf58a;--glow:#2f7d4f99;--spot:#164a2a;--stg:#1d4a2c;--h1:linear-gradient(#eaffc0,#8fd14f)}
 *{box-sizing:border-box;margin:0}
 [hidden]{display:none!important}
-body{font:15px/1.5 'DM Sans',sans-serif;background:radial-gradient(ellipse 80% 50% at 50% -10%,#5a1626,transparent 70%),var(--bg);color:var(--tx);min-height:100vh}
+body{font:15px/1.5 'DM Sans',sans-serif;background:radial-gradient(ellipse 80% 50% at 50% -10%,var(--spot),transparent 70%),var(--bg);color:var(--tx);min-height:100vh}
 body::before,body::after{content:"";position:fixed;top:0;bottom:0;width:3.5vw;background:repeating-linear-gradient(90deg,#6d0b1b 0 8px,#a3142f 8px 16px);box-shadow:0 0 30px #000;z-index:1;pointer-events:none}
 body::before{left:0}body::after{right:0}
-header{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:10px 6vw;background:#0b0608ee;backdrop-filter:blur(8px);border-bottom:1px solid var(--ln)}
-.logo{font:30px 'Bebas Neue';letter-spacing:5px;color:var(--gold);text-decoration:none}
-main{padding:0 6vw 60px;position:relative}
-.bulbs{height:14px;background:radial-gradient(circle,var(--gold) 3px,transparent 4px) 0 0/28px 14px repeat-x;filter:drop-shadow(0 0 4px var(--gold));animation:bl 2.4s steps(2) infinite}
+header{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:10px 6vw;background:var(--hd);backdrop-filter:blur(8px);border-bottom:1px solid var(--ln)}
+.logo{font:30px var(--hf);letter-spacing:5px;color:var(--a);text-decoration:none}
+main{padding:0 6vw 60px;position:relative;z-index:2}
+.bulbs{position:relative;z-index:2;height:14px;background:radial-gradient(circle,var(--a) 3px,transparent 4px) 0 0/28px 14px repeat-x;filter:drop-shadow(0 0 4px var(--a));animation:bl 2.4s steps(2) infinite}
 @keyframes bl{50%{opacity:.45}}
 @media(prefers-reduced-motion:reduce){.bulbs{animation:none}}
 .hero{text-align:center;padding:44px 0 30px}
-.hero h1{font:clamp(64px,14vw,150px)/.9 'Bebas Neue';letter-spacing:8px;background:linear-gradient(#fff3c4,#e0a52a);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 4px 24px #b3122b99)}
+.hero h1{font:clamp(64px,14vw,150px)/.9 var(--hf);letter-spacing:8px;background:var(--h1);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 4px 24px var(--glow))}
 .hero p{color:var(--mu);margin-top:12px}
 .rooms{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:24px}
 .ticket{background:var(--card);border:1px solid var(--ln);border-radius:14px;overflow:hidden;transition:transform .25s,box-shadow .25s}
-.ticket:hover{transform:translateY(-6px);box-shadow:0 14px 40px #b3122b55}
-.poster{display:flex;flex-direction:column;justify-content:flex-end;aspect-ratio:4/5;padding:16px;color:inherit;text-decoration:none;background:linear-gradient(to top,#000e,#0002 65%),var(--img) center/cover,linear-gradient(135deg,#5a0f1d,#1a0f13);position:relative}
-.poster h3{font:32px/1 'Bebas Neue';letter-spacing:2px}
+.ticket:hover{transform:translateY(-6px);box-shadow:0 14px 40px var(--glow)}
+.poster{display:flex;flex-direction:column;justify-content:flex-end;aspect-ratio:4/5;padding:16px;color:inherit;text-decoration:none;background:linear-gradient(to top,#000e,#0002 65%),var(--img) center/cover,linear-gradient(135deg,var(--a2),var(--card));position:relative}
+.poster h3{font:32px/1 var(--hf);letter-spacing:2px}
 .poster p{font-size:13px;color:#ddd;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.adm{position:absolute;top:12px;left:12px;border:1px dashed var(--gold);color:var(--gold);font-size:11px;padding:2px 8px;border-radius:4px;transform:rotate(-4deg)}
+.adm{position:absolute;top:12px;left:12px;background:#000b;border:1px solid var(--hl);color:#fff;font-size:12px;padding:2px 10px;border-radius:999px}
+.chip{display:inline-block;background:#000b;border:1px solid var(--hl);color:#fff;font-size:12px;padding:2px 10px;border-radius:999px}
 .tb{display:flex;gap:6px;flex-wrap:wrap;padding:10px}
-.btn{background:#2a1a20;color:var(--tx);border:1px solid var(--ln);padding:8px 14px;border-radius:999px;cursor:pointer;font:inherit;font-weight:500;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
-.btn:hover{border-color:var(--gold)}
-.btn.gold{background:linear-gradient(#ffd877,#e0a52a);color:#2a1500;border:0;font-weight:700}
+.btn{background:var(--card);color:var(--tx);border:1px solid var(--ln);padding:8px 14px;border-radius:999px;cursor:pointer;font:inherit;font-weight:500;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--a)}
+.btn.gold{background:var(--abtn);color:var(--on);border:0;font-weight:700}
 .btn:disabled{opacity:.5}
 .ic{background:#0007;border:0;color:#fff;border-radius:8px;padding:4px 8px;cursor:pointer}
-.empty{color:var(--mu);padding:30px;text-align:center}
-.rhead{margin:22px 0;padding:44px 28px;border-radius:18px;background:linear-gradient(#000a,#000e),var(--img) center/cover,#2a0f18;border:1px solid var(--ln)}
-.rhead h1{font:clamp(40px,7vw,72px)/1 'Bebas Neue';letter-spacing:3px;color:var(--gold)}
+.empty{color:var(--mu);padding:30px;text-align:center;column-span:all}
+.rhead{margin:22px 0;padding:44px 28px;border-radius:18px;background:linear-gradient(#000a,#000e),var(--img) center/cover,var(--a2);border:1px solid var(--ln)}
+.rhead h1{font:clamp(40px,7vw,72px)/1 var(--hf);letter-spacing:3px;color:var(--hl)}
 .rhead p{color:#ddd;max-width:600px;margin:6px 0 16px}
-.back{color:var(--mu);text-decoration:none;font-size:13px}
+.back{color:#ddd;text-decoration:none;font-size:13px}
 .acts{display:flex;gap:8px;flex-wrap:wrap}
 .wall{columns:260px;column-gap:18px}
 .pc{break-inside:avoid;margin-bottom:18px;background:var(--card);border:1px solid var(--ln);border-radius:14px;overflow:hidden;cursor:pointer;transition:.2s}
-.pc:hover{border-color:var(--gold);transform:scale(1.02)}
-.th{aspect-ratio:16/10;background:linear-gradient(135deg,#3b0d1a,#161016) center/cover;display:grid;place-items:center;position:relative}
+.pc:hover{border-color:var(--a);transform:scale(1.02)}
+.th{aspect-ratio:16/10;background:linear-gradient(135deg,var(--a2),var(--card)) center/cover;display:grid;place-items:center;position:relative}
 .th.tt,.th.ig{aspect-ratio:4/5}
-.play{width:54px;height:54px;border-radius:50%;background:#000a;border:2px solid var(--gold);display:grid;place-items:center;font-size:22px;color:var(--gold)}
-.tag{position:absolute;top:8px;left:8px;font-size:11px;background:var(--red);padding:2px 8px;border-radius:6px}
+.play{width:54px;height:54px;border-radius:50%;background:#000a;border:2px solid var(--hl);display:grid;place-items:center;font-size:22px;color:var(--hl)}
+.tag{position:absolute;top:8px;left:8px;font-size:11px;color:#fff;background:var(--a2);padding:2px 8px;border-radius:6px}
 .pb{padding:12px}.pb h4{font-size:16px}
 .pb p{color:var(--mu);font-size:13px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .by{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;color:var(--mu)}
 .by i,.cmt i{width:28px;height:28px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;font-style:normal}
-.by .ic{margin-left:auto}
-#stage{position:fixed;inset:0;z-index:50;background:radial-gradient(ellipse at 40% 0,#4a1020,#050203 70%);display:flex;overflow:auto}
+.ctl{margin-left:auto;display:flex;gap:4px}
+#stage{position:fixed;inset:0;z-index:50;background:radial-gradient(ellipse at 40% 0,var(--stg),#050203 70%);display:flex;overflow:auto;color:#f6ece4;--bg:#0b0a09;--tx:#f6ece4;--mu:#b9ad9f;--card:#1b1714;--ln:#3a342c}
 .scr{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:56px 70px 20px;min-width:0;position:relative}
-.screen{width:min(100%,calc(70vh*var(--r,1.78)));aspect-ratio:var(--r,1.78);border:3px solid var(--gold);border-radius:10px;box-shadow:0 0 60px #f5c45155,0 0 0 8px #000;background:#000;overflow:hidden;display:grid;place-items:center}
+.screen{width:min(100%,calc(62vh*var(--r,1.78)));aspect-ratio:var(--r,1.78);border:3px solid var(--hl);border-radius:10px;box-shadow:0 0 60px var(--glow),0 0 0 8px #000;background:#000;overflow:hidden;display:grid;place-items:center}
 iframe{width:100%;height:100%;border:0}
 .meta{margin-top:20px;text-align:center;max-width:700px}
 .meta p{color:var(--mu)}
-.meta a{color:var(--gold)}
-.nav{position:absolute;top:45%;width:46px;height:46px;border-radius:50%;border:1px solid var(--gold);background:#000a;color:var(--gold);font-size:26px;cursor:pointer}
+.meta a{color:var(--hl)}
+.nav{position:absolute;top:45%;width:46px;height:46px;border-radius:50%;border:1px solid var(--hl);background:#000a;color:var(--hl);font-size:26px;cursor:pointer}
 .nav.l{left:12px}.nav.r{right:12px}
-.x{position:fixed;top:12px;right:14px;z-index:60;width:40px;height:40px;border-radius:50%;border:0;background:var(--red);color:#fff;font-size:18px;cursor:pointer}
+.x{position:fixed;top:12px;right:14px;z-index:60;width:40px;height:40px;border-radius:50%;border:0;background:var(--a2);color:#fff;font-size:18px;cursor:pointer}
 .cm{width:340px;flex-shrink:0;background:#0d0709ee;border-left:1px solid var(--ln);display:flex;flex-direction:column;padding:56px 16px 16px}
-.cm h3{font:22px 'Bebas Neue';letter-spacing:2px;color:var(--gold);margin-bottom:10px}
+.cm h3{font:22px var(--hf);letter-spacing:2px;color:var(--hl);margin-bottom:10px}
 #clist{flex:1;overflow:auto;display:flex;flex-direction:column;gap:12px;margin-bottom:12px;min-height:80px}
 .cmt{display:flex;gap:10px;align-items:flex-start}.cmt p{font-size:14px;word-break:break-word}.cmt small{color:var(--mu)}
 .cmt .ic{margin-left:auto}
 @media(max-width:860px){body::before,body::after{width:2vw}#stage{flex-direction:column}.scr{padding:56px 14px 10px;flex:none}.cm{width:auto;border:0;padding-top:10px}.nav{top:35%}.nav.l{left:2px}.nav.r{right:2px}}
 #modal{position:fixed;inset:0;background:#000b;z-index:80;display:grid;place-items:center;padding:16px}
-.box{background:var(--card);border:1px solid var(--gold);border-radius:16px;padding:22px;width:min(440px,100%);max-height:90vh;overflow:auto}
-.box h3{font:26px 'Bebas Neue';letter-spacing:2px;color:var(--gold)}
+.box{background:var(--card);border:1px solid var(--a);border-radius:16px;padding:22px;width:min(440px,100%);max-height:90vh;overflow:auto}
+.box h3{font:26px var(--hf);letter-spacing:2px;color:var(--a)}
 label{display:block;margin:10px 0;font-size:13px;color:var(--mu)}
 input,select,textarea{width:100%;margin-top:4px;padding:9px 11px;background:var(--bg);border:1px solid var(--ln);border-radius:8px;color:var(--tx);font:inherit}
-:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-.st{color:var(--gold);font-size:13px;margin-top:8px;min-height:18px}
+:focus-visible{outline:2px solid var(--a);outline-offset:2px}
+.st{color:var(--a);font-size:13px;margin-top:8px;min-height:18px}
 .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--gold);color:#2a1500;padding:10px 18px;border-radius:999px;z-index:100;font-weight:700}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--abtn);color:var(--on);padding:10px 18px;border-radius:999px;z-index:100;font-weight:700}
+#bg{position:fixed;inset:0;z-index:0;background:center/cover;opacity:0;transition:opacity .6s;pointer-events:none}
+#bg.on{opacity:1}
+#bg::after{content:"";position:absolute;inset:0;background:var(--bg);opacity:.8}
+body:not([data-theme=bioskop])::before,body:not([data-theme=bioskop])::after{display:none}
+body[data-theme=galeri] .bulbs{display:none}
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+.bar input{flex:1;min-width:200px;max-width:340px;margin:0}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chp{background:var(--card);color:var(--tx);border:1px solid var(--ln);border-radius:999px;padding:6px 12px;cursor:pointer;font:inherit;font-size:13px}
+.chp.on{background:var(--abtn);color:var(--on);border-color:transparent;font-weight:700}
+#cnt{color:var(--mu);font-size:13px}
+.rx{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+.rb{background:#0007;color:#fff;border:1px solid var(--ln);border-radius:999px;padding:5px 12px;cursor:pointer;font:inherit}
+.rb.on{border-color:var(--hl);background:#fff3}
+.rxs{margin-top:8px;font-size:13px;color:var(--mu)}
+.pc.pk{border-color:var(--a);box-shadow:0 0 18px var(--glow)}
+.pick{left:auto;right:8px;background:var(--abtn);color:var(--on)}
+.lnk{background:none;border:0;color:var(--hl);cursor:pointer;font:inherit;font-size:12px;padding:0}
+.cmt.sub{margin-left:36px}
+.to{color:var(--hl)}
+.rpl{font-size:13px;color:var(--mu);margin-top:8px}
 </style>
 </head>
-<body>
+<body data-theme="bioskop">
 <header><a class="logo" href="#/">Artefact</a><button class="btn" id="adm" data-a="admin">🔒 Admin</button></header>
 <div class="bulbs"></div>
+<div id="bg"></div>
 <main id="app"></main>
 
 <div id="stage" hidden>
@@ -90,13 +118,14 @@ input,select,textarea{width:100%;margin-top:4px;padding:9px 11px;background:var(
   <button class="nav l" data-a="prev" aria-label="Sebelumnya">‹</button>
   <div class="screen" id="screen"></div>
   <button class="nav r" data-a="next" aria-label="Berikutnya">›</button>
-  <div class="meta" id="meta"></div>
+  <div class="meta" id="meta"></div><div class="rx" id="rx"></div>
  </div>
  <aside class="cm">
   <h3>Komentar</h3>
   <div id="clist"></div>
   <form id="cf">
    <input name="name" placeholder="Namamu (wajib diisi)" maxlength="30" required>
+   <div id="rpl" class="rpl" hidden></div>
    <textarea name="text" rows="2" placeholder="Tulis komentar…" maxlength="300" style="margin:8px 0"></textarea>
    <button class="btn gold">Kirim komentar</button>
    <p class="st"></p>
@@ -108,7 +137,7 @@ input,select,textarea{width:100%;margin-top:4px;padding:9px 11px;background:var(
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import {getFirestore,collection,doc,addDoc,setDoc,getDoc,getDocs,updateDoc,deleteDoc,onSnapshot,query,where} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import {getFirestore,collection,doc,addDoc,setDoc,getDoc,getDocs,updateDoc,deleteDoc,onSnapshot,query,where,increment} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const db=getFirestore(initializeApp({
   apiKey:"AIzaSyCLVvWdZu7tpwy-IIA93wYaOhmzdurzric",authDomain:"artefact-735d7.firebaseapp.com",
@@ -125,13 +154,54 @@ const when=t=>new Date(t).toLocaleString('id-ID',{day:'numeric',month:'short',ho
 const sha=async s=>crypto.subtle?[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)))].map(b=>b.toString(16).padStart(2,'0')).join(''):s;
 const toast=m=>{const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(t._t);t._t=setTimeout(()=>t.hidden=true,2400)};
 const modal=h=>{$('#box').innerHTML=h;$('#modal').hidden=false};
-const closeModal=()=>$('#modal').hidden=true;
+const closeModal=()=>{$('#modal').hidden=true;look()};
 
-let rooms=[],posts=[],curRoom=null,fi=0,sid=null,uPosts=null,uCom=null;
+let rooms=[],posts=[],curRoom=null,fi=0,sid=null,uPosts=null,uCom=null,site='bioskop',sig='',q='',ft='all',view=[],replyTo=null,replyName='',comList=[];
 let admin=sessionStorage.af_admin==='1',myName=localStorage.af_name||'';
 const TAG={yt:'YouTube',tt:'TikTok',ig:'Instagram',pdf:'Dokumen',ppt:'Presentasi',link:'Link'};
 const ICON={yt:'▶',tt:'♪',ig:'◎',pdf:'📄',ppt:'📊',link:'🔗'};
 
+const THEMES={bioskop:'🎬 Bioskop',neon:'🕹 Neon Arcade',galeri:'🖼 Galeri Museum',angkasa:'🚀 Angkasa',alam:'🌿 Hutan'};
+const themeOpts=(v,inh)=>(inh?`<option value="">Ikuti tema dashboard</option>`:'')+Object.entries(THEMES).map(([k,n])=>`<option value="${k}"${k===v?' selected':''}>${n}</option>`).join('');
+const isOpen=r=>(r.mode||'open')==='open'||(r.mode==='deadline'&&Date.now()<r.deadline);
+const stat=r=>{const m=r.mode||'open';return m==='open'?'🟢 Terbuka':m==='closed'?'🔴 Ditutup':isOpen(r)?'🟡 Batas '+when(r.deadline):'🔴 Ditutup sejak '+when(r.deadline)};
+const toLocal=t=>new Date(t-new Date(t).getTimezoneOffset()*6e4).toISOString().slice(0,16);
+const upBtn=r=>isOpen(r)||admin?`<button class="btn gold" data-a="up" data-id="${r.id}">＋ Kirim karya</button>`:`<button class="btn" disabled>🔒 Pengumpulan ditutup</button>`;
+const roomOpts=r=>{const m=r?.mode||'open',o=(v,n)=>`<option value="${v}"${m===v?' selected':''}>${n}</option>`;
+ return `<label>Tema room<select name="theme">${themeOpts(r?.theme||'',1)}</select></label><label>Karya pilihan<select name="feat"><option value="0">Tidak aktif</option><option value="1"${r?.feat?' selected':''}>Aktif (admin bisa menyematkan karya)</option></select></label><label>Pengumpulan karya<select name="mode">${o('open','Terbuka')}${o('deadline','Dengan batas waktu')}${o('closed','Ditutup')}</select></label><label class="dl" ${m==='deadline'?'':'hidden'}>Batas pengumpulan<input type="datetime-local" name="deadline" value="${r?.deadline?toLocal(r.deadline):''}"></label>`};
+function look(){
+  const r=curRoom&&rooms.find(x=>x.id===curRoom),b=$('#bg');
+  document.body.dataset.theme=(r&&r.theme)||site||'bioskop';
+  if(r&&r.cover){b.style.backgroundImage=`url("${r.cover}")`;b.classList.add('on')}else b.classList.remove('on');
+}
+function rerender(){curRoom?renderRoom():renderHome()}
+const RX={l:'❤️',c:'👏',f:'🔥',w:'😮',s:'💡'};
+const CH=[['all','Semua'],['video','🎬 Video'],['ppt','📊 PPT'],['pdf','📄 PDF'],['link','🔗 Link lain']];
+const rxSum=p=>Object.entries(RX).filter(([k])=>(p.rx||{})[k]>0).map(([k,e])=>e+' '+p.rx[k]).join('  ');
+const rxBar=p=>{const m=JSON.parse(localStorage.af_rx||'{}')[p.id];return Object.entries(RX).map(([k,e])=>`<button class="rb${m===k?' on':''}" data-a="rx" data-k="${k}">${e} <b>${(p.rx||{})[k]||0}</b></button>`).join('')};
+async function react(k){
+  const m=JSON.parse(localStorage.af_rx||'{}'),prev=m[sid],u={};
+  if(prev===k){u['rx.'+k]=increment(-1);delete m[sid]}else{u['rx.'+k]=increment(1);if(prev)u['rx.'+prev]=increment(-1);m[sid]=k}
+  localStorage.af_rx=JSON.stringify(m);
+  await updateDoc(doc(db,'posts',sid),u);
+}
+const chkF=file=>{const ext=file.name.split('.').pop().toLowerCase();if(!['pdf','ppt','pptx'].includes(ext))throw Error('Hanya file PDF, PPT, atau PPTX.');if(file.size>10*1048576)throw Error('Ukuran file maksimal 10 MB.');return ext};
+const ctl=(p,fe)=>`<span class="ctl">${admin&&fe?`<button class="ic" data-a="star" data-id="${p.id}" title="Karya pilihan">${p.featured?'⭐':'☆'}</button>`:''}${admin?`<button class="ic" data-a="unlock" data-id="${p.id}" title="Izinkan siswa edit/hapus">${p.editOpen?'🔓':'🔒'}</button>`:''}${admin||p.editOpen?`<button class="ic" data-a="editpost" data-id="${p.id}" title="Edit">✏️</button><button class="ic" data-a="delpost" data-id="${p.id}" title="Hapus">🗑</button>`:''}</span>`;
+const editModal=p=>modal(`<h3>Edit karya</h3><form id="ef" data-id="${p.id}"><label>Judul<input name="title" required maxlength="80" value="${esc(p.title)}"></label><label>Caption<textarea name="cap" rows="2" maxlength="300">${esc(p.caption)}</textarea></label>${p.kind==='link'?`<label>Link<input name="u" value="${esc(p.url)}"></label>`:`<label>Ganti file (opsional, maks 10 MB)<input type="file" name="f" accept=".pdf,.ppt,.pptx"></label>`}<div class="row"><button class="btn gold">Simpan</button><button type="button" class="btn" data-a="cm">Batal</button></div><p class="st"></p></form>`);
+function qrModal(id){
+  const r=rooms.find(x=>x.id===id),u=location.href.split('#')[0]+'#/r/'+id;
+  modal(`<h3>Kode QR</h3><p style="color:var(--mu);margin:6px 0 12px">${esc(r?.name)}</p><div id="qr" style="background:#fff;padding:14px;border-radius:12px;display:inline-block"></div><p class="st" style="word-break:break-all">${esc(u)}</p><div class="row"><button class="btn gold" data-a="dlqr">Unduh PNG</button><button class="btn" data-a="cm">Tutup</button></div>`);
+  new QRCode($('#qr'),{text:u,width:260,height:260,correctLevel:QRCode.CorrectLevel.M});
+}
+function clearReply(){replyTo=null;replyName='';$('#rpl').hidden=true}
+function drawWall(){
+  const r=rooms.find(x=>x.id===curRoom)||{},t=q.trim().toLowerCase();
+  view=posts.filter(p=>{const m=media(p).t;
+    return (ft==='all'||(ft==='video'?['yt','tt','ig'].includes(m):m===ft))&&(!t||(p.title+' '+p.name+' '+(p.caption||'')).toLowerCase().includes(t))})
+   .sort((a,b)=>(r.feat?(b.featured?1:0)-(a.featured?1:0):0)||b.created-a.created);
+  $('#wall').innerHTML=view.map(pcard).join('')||`<p class="empty">${posts.length?'Tidak ada karya yang cocok.':'Belum ada karya. Jadilah yang pertama mengirim!'}</p>`;
+  $('#cnt').textContent=view.length+' dari '+posts.length+' karya';
+}
 async function up(file){
   const f=new FormData();f.append('file',file);f.append('upload_preset',PRESET);
   const r=await fetch(`https://api.cloudinary.com/v1_1/${CLOUD}/auto/upload`,{method:'POST',body:f});
@@ -154,16 +224,18 @@ function media(p){
 
 /* ---------- data ---------- */
 onSnapshot(collection(db,'rooms'),s=>{
-  rooms=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.created||0)-(a.created||0));route();
+  rooms=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.created||0)-(a.created||0));sig=rooms.map(isOpen).join();route();
 },e=>{$('#app').innerHTML='<p class="empty">Gagal memuat data. Pastikan Firestore sudah dibuat dan aturan (rules) mengizinkan baca/tulis.</p>'});
 
+onSnapshot(doc(db,'config','site'),d=>{site=d.exists()?d.data().theme||'bioskop':'bioskop';look()});
+setInterval(()=>{const s=rooms.map(isOpen).join();if(s!==sig){sig=s;rerender()}},15000);
 function route(){
   const m=location.hash.match(/^#\/r\/(\w+)/);
   if(m){
     if(curRoom!==m[1]){
-      curRoom=m[1];uPosts&&uPosts();posts=[];
+      curRoom=m[1];q='';ft='all';uPosts&&uPosts();posts=[];
       uPosts=onSnapshot(query(collection(db,'posts'),where('roomId','==',curRoom)),s=>{
-        posts=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>b.created-a.created);renderRoom();syncStage();
+        posts=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>b.created-a.created);$('#wall')?drawWall():renderRoom();syncStage();
       });
     }
     renderRoom();
@@ -172,60 +244,62 @@ function route(){
 window.onhashchange=()=>{closeStage();route()};
 
 /* ---------- views ---------- */
-const ticket=r=>`<article class="ticket"><a class="poster" href="#/r/${r.id}" style="--img:url('${esc(r.cover||'')}')"><span class="adm">Admit one</span><h3>${esc(r.name)}</h3><p>${esc(r.desc||'')}</p></a>
-<div class="tb"><a class="btn" href="#/r/${r.id}">▶ Tonton</a><button class="btn gold" data-a="up" data-id="${r.id}">＋ Kirim karya</button>
-${admin?`<button class="ic" data-a="copy" data-id="${r.id}" title="Salin link">🔗</button><button class="ic" data-a="editroom" data-id="${r.id}" title="Edit">⚙</button><button class="ic" data-a="delroom" data-id="${r.id}" title="Hapus">🗑</button>`:''}</div></article>`;
+const ticket=r=>`<article class="ticket"><a class="poster" href="#/r/${r.id}" style="--img:url('${esc(r.cover||'')}')"><span class="adm">${stat(r)}</span><h3>${esc(r.name)}</h3><p>${esc(r.desc||'')}</p></a>
+<div class="tb"><a class="btn" href="#/r/${r.id}">▶ Tonton</a>${upBtn(r)}
+${admin?`<button class="ic" data-a="copy" data-id="${r.id}" title="Salin link">🔗</button><button class="ic" data-a="qr" data-id="${r.id}" title="Kode QR">▣</button><button class="ic" data-a="editroom" data-id="${r.id}" title="Edit">⚙</button><button class="ic" data-a="delroom" data-id="${r.id}" title="Hapus">🗑</button>`:''}</div></article>`;
 
-function renderHome(){
+function renderHome(){look();
   $('#app').innerHTML=`<section class="hero"><h1>Artefact</h1><p>Panggung karya siswa. Pilih room, kirim projectmu, lalu tonton karya teman-temanmu.</p></section>
   <div class="rooms">${rooms.map(ticket).join('')||'<p class="empty">Belum ada room. Admin dapat membuatnya lewat tombol Admin di pojok kanan atas.</p>'}</div>`;
 }
 
-function pcard(p,i){
+function pcard(p,i){const fe=(rooms.find(x=>x.id===curRoom)||{}).feat;
   const m=media(p);
-  return `<article class="pc" data-a="focus" data-i="${i}"><div class="th ${m.t}" ${m.th?`style="background-image:url('${m.th}')"`:''}><span class="play">${ICON[m.t]}</span><b class="tag">${TAG[m.t]}</b></div>
+  return `<article class="pc${fe&&p.featured?' pk':''}" data-a="focus" data-i="${i}"><div class="th ${m.t}" ${m.th?`style="background-image:url('${m.th}')"`:''}><span class="play">${ICON[m.t]}</span><b class="tag">${TAG[m.t]}</b>${fe&&p.featured?'<b class="tag pick">⭐ Pilihan</b>':''}</div>
   <div class="pb"><h4>${esc(p.title)}</h4>${p.caption?`<p>${esc(p.caption)}</p>`:''}
-  <div class="by"><i style="background:${col(p.name)}">${em(p.name)}</i>${esc(p.name)}${admin?`<button class="ic" data-a="delpost" data-id="${p.id}" title="Hapus karya">🗑</button>`:''}</div></div></article>`;
+  <div class="by"><i style="background:${col(p.name)}">${em(p.name)}</i>${esc(p.name)}${ctl(p,fe)}</div>${rxSum(p)?`<div class="rxs">${rxSum(p)}</div>`:''}</div></article>`;
 }
 
-function renderRoom(){
+function renderRoom(){look();
   const r=rooms.find(x=>x.id===curRoom);
   if(!r){$('#app').innerHTML='<p class="empty">Memuat room…</p>';return}
-  $('#app').innerHTML=`<section class="rhead" style="--img:url('${esc(r.cover||'')}')"><a class="back" href="#/">← Semua room</a><h1>${esc(r.name)}</h1><p>${esc(r.desc||'')}</p>
-  <div class="acts"><button class="btn gold" data-a="up" data-id="${r.id}">＋ Kirim karya</button><button class="btn" data-a="focus" data-i="0">🎬 Mode fokus</button><button class="btn" data-a="copy">🔗 Salin link room</button></div></section>
-  <div class="wall">${posts.map(pcard).join('')||'<p class="empty">Belum ada karya. Jadilah yang pertama mengirim!</p>'}</div>`;
+  $('#app').innerHTML=`<section class="rhead" style="--img:url('${esc(r.cover||'')}')"><a class="back" href="#/">← Semua room</a><br><span class="chip" style="margin-top:10px">${stat(r)}</span><h1>${esc(r.name)}</h1><p>${esc(r.desc||'')}</p>
+  <div class="acts">${upBtn(r)}<button class="btn" data-a="focus" data-i="0">🎬 Mode fokus</button><button class="btn" data-a="copy">🔗 Salin link room</button><button class="btn" data-a="qr">▣ Kode QR</button></div></section>
+  <div class="bar"><input id="q" type="search" placeholder="Cari judul atau nama siswa…" value="${esc(q)}"><div class="chips">${CH.map(([k,n])=>`<button class="chp${ft===k?' on':''}" data-a="ft" data-k="${k}">${n}</button>`).join('')}</div><span id="cnt"></span></div><div class="wall" id="wall"></div>`;drawWall();
 }
 
 /* ---------- stage (mode fokus) ---------- */
 function openStage(i){
   fi=i;$('#stage').hidden=false;document.body.style.overflow='hidden';
-  $('#cf [name=name]').value=myName;renderStage();
+  $('#cf [name=name]').value='';renderStage();
 }
 function closeStage(){
   uCom&&uCom();uCom=null;sid=null;$('#screen').innerHTML='';$('#stage').hidden=true;document.body.style.overflow='';
 }
 function syncStage(){
   if($('#stage').hidden)return;
-  const i=posts.findIndex(p=>p.id===sid);
-  if(i<0)return closeStage();
+  const i=view.findIndex(p=>p.id===sid);
+  if(i<0)return closeStage();$('#rx').innerHTML=rxBar(view[i]);
   fi=i;
 }
 function renderStage(){
-  const p=posts[fi];if(!p)return closeStage();
+  const p=view[fi];if(!p)return closeStage();clearReply();$('#rx').innerHTML=rxBar(p);
   sid=p.id;const m=media(p),s=$('#screen');
   s.style.setProperty('--r',m.r);
   s.innerHTML=m.src?`<iframe src="${esc(m.src)}" allow="autoplay;encrypted-media;fullscreen;picture-in-picture" allowfullscreen></iframe>`
    :`<div style="padding:20px;text-align:center"><p style="margin-bottom:12px">Link ini tidak bisa diputar langsung di sini.</p><a class="btn gold" target="_blank" rel="noopener" href="${esc(p.url)}">Buka link ↗</a></div>`;
   $('#meta').innerHTML=`<h2>${esc(p.title)}</h2>${p.caption?`<p>${esc(p.caption)}</p>`:''}
-  <div class="by" style="justify-content:center"><i style="background:${col(p.name)}">${em(p.name)}</i>${esc(p.name)} · ${fi+1}/${posts.length} · <a target="_blank" rel="noopener" href="${esc(p.url)}">Buka asli ↗</a></div>`;
+  <div class="by" style="justify-content:center"><i style="background:${col(p.name)}">${em(p.name)}</i>${esc(p.name)} · ${fi+1}/${view.length} · <a target="_blank" rel="noopener" href="${esc(p.url)}">Buka asli ↗</a></div>`;
   uCom&&uCom();
   uCom=onSnapshot(query(collection(db,'comments'),where('postId','==',p.id)),s=>{
-    const l=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>a.created-b.created),c=$('#clist');
-    c.innerHTML=l.map(x=>`<div class="cmt"><i style="background:${col(x.name)}">${em(x.name)}</i><div><b>${esc(x.name)}</b> <small>${when(x.created)}</small><p>${esc(x.text)}</p></div>${admin?`<button class="ic" data-a="delcom" data-id="${x.id}">🗑</button>`:''}</div>`).join('')||'<p class="empty">Belum ada komentar.</p>';
+    comList=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>a.created-b.created);const c=$('#clist');
+    const one=(x,sub)=>`<div class="cmt${sub?' sub':''}"><i style="background:${col(x.name)}">${em(x.name)}</i><div><b>${esc(x.name)}</b> ${sub&&x.to?`<small class="to">↪ ${esc(x.to)}</small> `:''}<small>${when(x.created)}</small><p>${esc(x.text)}</p><button class="lnk" data-a="reply" data-id="${x.id}">↩ Balas</button></div>${admin?`<button class="ic" data-a="delcom" data-id="${x.id}">🗑</button>`:''}</div>`;
+    const tops=comList.filter(x=>!x.parent||!comList.some(y=>y.id===x.parent));
+    c.innerHTML=tops.map(x=>one(x)+comList.filter(y=>y.parent===x.id).map(y=>one(y,1)).join('')).join('')||'<p class="empty">Belum ada komentar.</p>';
     c.scrollTop=1e9;
   });
 }
-const step=d=>{if(!posts.length)return;fi=(fi+d+posts.length)%posts.length;renderStage()};
+const step=d=>{if(!view.length)return;fi=(fi+d+view.length)%view.length;renderStage()};
 
 /* ---------- modals ---------- */
 const upModal=rid=>modal(`<h3>Kirim karya</h3><form id="uf" data-rid="${rid}">
@@ -240,13 +314,13 @@ const upModal=rid=>modal(`<h3>Kirim karya</h3><form id="uf" data-rid="${rid}">
 const roomModal=r=>modal(`<h3>${r?'Edit':'Buat'} room</h3><form id="rf"><input type="hidden" name="rid" value="${r?r.id:''}">
 <label>Nama room<input name="name" required maxlength="60" value="${esc(r?.name)}"></label>
 <label>Deskripsi / instruksi tugas<textarea name="desc" rows="3" maxlength="300">${esc(r?.desc)}</textarea></label>
-<label>Gambar sampul${r?' (kosongkan jika tidak diganti)':''}<input type="file" name="cover" accept="image/*"></label>
+<label>Gambar sampul${r?' (kosongkan jika tidak diganti)':''}<input type="file" name="cover" accept="image/*"></label>${roomOpts(r)}
 <div class="row"><button class="btn gold">Simpan</button><button type="button" class="btn" data-a="cm">Batal</button></div><p class="st"></p></form>`);
 
 function adminModal(){
   if(!admin)return modal(`<h3>Masuk admin</h3><form id="lf"><label>Password<input type="password" name="pw" required autofocus></label>
   <div class="row"><button class="btn gold">Masuk</button><button type="button" class="btn" data-a="cm">Batal</button></div><p class="st"></p></form>`);
-  modal(`<h3>Panel admin</h3><div class="row" style="flex-direction:column"><button class="btn gold" data-a="newroom">＋ Buat room baru</button><button class="btn" data-a="pw">🔑 Ganti password</button><button class="btn" data-a="logout">Keluar admin</button><button class="btn" data-a="cm">Tutup</button></div>`);
+  modal(`<h3>Panel admin</h3><div class="row" style="flex-direction:column"><button class="btn gold" data-a="newroom">＋ Buat room baru</button><button class="btn" data-a="sitetheme">🎨 Tema dashboard</button><button class="btn" data-a="pw">🔑 Ganti password</button><button class="btn" data-a="logout">Keluar admin</button><button class="btn" data-a="cm">Tutup</button></div>`);
 }
 
 const adminUI=()=>{$('#adm').textContent=admin?'⚙ Admin':'🔒 Admin';curRoom?renderRoom():renderHome();if(!$('#stage').hidden)renderStage()};
@@ -260,22 +334,32 @@ async function delPost(id){
 document.addEventListener('click',async e=>{
   if(e.target.id==='modal')return closeModal();
   const t=e.target.closest('[data-a]');if(!t)return;
-  const {a,id,i}=t.dataset;
+  const {a,id,i,k}=t.dataset;
   try{
     if(a==='up')upModal(id);
     else if(a==='cm')closeModal();
     else if(a==='copy')navigator.clipboard.writeText(location.href.split('#')[0]+'#/r/'+(id||curRoom)).then(()=>toast('Link room disalin'));
-    else if(a==='focus'){if(!posts.length)return toast('Belum ada karya');openStage(+i)}
+    else if(a==='focus'){if(!view.length)return toast('Belum ada karya');openStage(+i)}
     else if(a==='close')closeStage();
+    else if(a==='rx')react(k);
+    else if(a==='ft'){ft=k;document.querySelectorAll('.chp').forEach(b=>b.classList.toggle('on',b.dataset.k===k));drawWall()}
+    else if(a==='qr')qrModal(id||curRoom);
+    else if(a==='dlqr'){const c=$('#qr canvas');if(c){const l=document.createElement('a');l.href=c.toDataURL('image/png');l.download='qr-room.png';l.click()}}
+    else if(a==='star'){const p=posts.find(x=>x.id===id);await updateDoc(doc(db,'posts',id),{featured:!p?.featured})}
+    else if(a==='unlock'){const p=posts.find(x=>x.id===id);await updateDoc(doc(db,'posts',id),{editOpen:!p?.editOpen});toast(p?.editOpen?'Akses edit ditutup':'Akses edit dibuka untuk karya ini')}
+    else if(a==='editpost'){const p=posts.find(x=>x.id===id);p&&editModal(p)}
+    else if(a==='reply'){const x=comList.find(c=>c.id===id);if(x){replyTo=x.parent||x.id;replyName=x.name;$('#rpl').innerHTML=`Membalas <b>${esc(x.name)}</b> <button type="button" class="lnk" data-a="norep">✕ batal</button>`;$('#rpl').hidden=false;$('#cf [name=text]').focus()}}
+    else if(a==='norep')clearReply();
     else if(a==='prev')step(-1);
     else if(a==='next')step(1);
     else if(a==='admin')adminModal();
     else if(a==='newroom')roomModal();
+    else if(a==='sitetheme')modal(`<h3>Tema dashboard</h3><form id="tf"><label>Tema<select name="theme">${themeOpts(site)}</select></label><div class="row"><button class="btn gold">Simpan</button><button type="button" class="btn" data-a="cm">Batal</button></div><p class="st"></p></form>`);
     else if(a==='editroom')roomModal(rooms.find(r=>r.id===id));
     else if(a==='pw')modal(`<h3>Ganti password</h3><form id="pf"><label>Password baru (min. 4 karakter)<input name="np" required minlength="4"></label><div class="row"><button class="btn gold">Simpan</button><button type="button" class="btn" data-a="cm">Batal</button></div><p class="st"></p></form>`);
     else if(a==='logout'){admin=false;delete sessionStorage.af_admin;closeModal();adminUI()}
     else if(a==='delpost'&&confirm('Hapus karya ini beserta komentarnya?')){await delPost(id);toast('Karya dihapus')}
-    else if(a==='delcom'&&confirm('Hapus komentar ini?'))await deleteDoc(doc(db,'comments',id));
+    else if(a==='delcom'&&confirm('Hapus komentar ini beserta balasannya?')){comList.filter(c=>c.parent===id).forEach(c=>deleteDoc(doc(db,'comments',c.id)));await deleteDoc(doc(db,'comments',id))}
     else if(a==='delroom'&&confirm('Hapus room ini beserta seluruh isinya?')){
       showBusy();
       (await getDocs(query(collection(db,'posts'),where('roomId','==',id)))).forEach(d=>delPost(d.id));
@@ -286,7 +370,7 @@ document.addEventListener('click',async e=>{
 const showBusy=()=>toast('Menghapus…');
 
 document.addEventListener('change',e=>{
-  if(e.target.name!=='k')return;
+  if(e.target.name==='theme')return void(document.body.dataset.theme=e.target.value||site);if(e.target.name==='mode')return void(e.target.form.querySelector('.dl').hidden=e.target.value!=='deadline');if(e.target.name!=='k')return;
   const l=e.target.value==='link',f=e.target.form;
   f.querySelector('.fg').hidden=l;f.querySelector('.lg').hidden=!l;
 });
@@ -297,7 +381,7 @@ document.addEventListener('submit',async e=>{
   try{
     b.disabled=true;
     if(f.id==='uf'){
-      const name=fd.get('name').trim();let kind,url;
+      const rr=rooms.find(x=>x.id===f.dataset.rid);if(!admin&&rr&&!isOpen(rr))throw Error('Pengumpulan karya untuk room ini sudah ditutup.');const name=fd.get('name').trim();let kind,url;
       if(fd.get('k')==='file'){
         const file=fd.get('f');if(!file.size)throw Error('Pilih file dulu.');
         const ext=file.name.split('.').pop().toLowerCase();
@@ -312,7 +396,7 @@ document.addEventListener('submit',async e=>{
       closeModal();toast('Karya terkirim!');
       if(curRoom!==f.dataset.rid)location.hash='#/r/'+f.dataset.rid;
     }else if(f.id==='rf'){
-      const data={name:fd.get('name').trim(),desc:fd.get('desc').trim()},file=fd.get('cover'),rid=fd.get('rid');
+      const mode=fd.get('mode'),dl=fd.get('deadline'),data={name:fd.get('name').trim(),desc:fd.get('desc').trim(),theme:fd.get('theme'),feat:fd.get('feat')==='1',mode,deadline:mode==='deadline'?new Date(dl).getTime():null},file=fd.get('cover'),rid=fd.get('rid');if(mode==='deadline'&&!dl)throw Error('Isi tanggal batas pengumpulan.');
       if(file.size){st.textContent='Mengunggah sampul…';data.cover=await up(file)}
       rid?await updateDoc(doc(db,'rooms',rid),data):await addDoc(collection(db,'rooms'),{...data,cover:data.cover||'',created:Date.now()});
       closeModal();toast('Room tersimpan');
@@ -320,13 +404,20 @@ document.addEventListener('submit',async e=>{
       const d=await getDoc(doc(db,'config','admin')),h=d.exists()?d.data().h:await sha(DEFAULT_PW);
       if(await sha(fd.get('pw'))!==h)throw Error('Password salah.');
       admin=true;sessionStorage.af_admin='1';closeModal();adminUI();toast('Masuk sebagai admin');
-    }else if(f.id==='pf'){
+    }else if(f.id==='ef'){
+      const p=posts.find(x=>x.id===f.dataset.id);if(!p)throw Error('Karya tidak ditemukan.');
+      const d={title:fd.get('title').trim(),caption:fd.get('cap').trim()};
+      if(p.kind==='link'){const u=fd.get('u').trim();if(!/^https?:\/\//.test(u))throw Error('Link harus diawali https://');d.url=u}
+      else{const file=fd.get('f');if(file&&file.size){const ext=chkF(file);st.textContent='Mengunggah…';d.url=await up(file);d.kind=ext==='pdf'?'pdf':'ppt'}}
+      if(!admin)d.editOpen=false;
+      await updateDoc(doc(db,'posts',p.id),d);closeModal();toast('Karya diperbarui');
+    }else if(f.id==='tf'){await setDoc(doc(db,'config','site'),{theme:fd.get('theme')});closeModal();toast('Tema dashboard diganti');}else if(f.id==='pf'){
       await setDoc(doc(db,'config','admin'),{h:await sha(fd.get('np'))});closeModal();toast('Password diganti');
     }else if(f.id==='cf'){
       const name=fd.get('name').trim(),text=fd.get('text').trim();
       if(!name)throw Error('Isi namamu dulu.');if(!text)return;
       myName=name;localStorage.af_name=name;
-      await addDoc(collection(db,'comments'),{postId:sid,roomId:curRoom,name,text,created:Date.now()});
+      await addDoc(collection(db,'comments'),{postId:sid,roomId:curRoom,name,text,parent:replyTo,to:replyName,created:Date.now()});clearReply();
       f.elements.text.value='';st.textContent='';
     }
   }catch(er){st.textContent=er.message}
@@ -341,6 +432,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='ArrowLeft')step(-1);
 });
 
+document.addEventListener('input',e=>{if(e.target.id==='q'){q=e.target.value;drawWall()}});
 adminUI();
 </script>
 </body>
