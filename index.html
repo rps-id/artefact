@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&family=Orbitron:wght@700&family=Playfair+Display:wght@700&family=Audiowide&family=Fredoka:wght@600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
 :root,body[data-theme=bioskop]{--bg:#0b0608;--a:#f5c451;--a2:#b3122b;--card:#1a0f13;--tx:#f6ece4;--mu:#a8968f;--ln:#3a2229;--hd:#0b0608ee;--hf:'Bebas Neue',sans-serif;--abtn:linear-gradient(#ffd877,#e0a52a);--on:#2a1500;--hl:#f5c451;--glow:#b3122b88;--spot:#5a1626;--stg:#4a1020;--h1:linear-gradient(#fff3c4,#e0a52a)}
 body[data-theme=neon]{--bg:#07051a;--a:#00f0ff;--a2:#ff2bd6;--card:#120d2e;--tx:#eeeeff;--mu:#9a96c8;--ln:#2c2766;--hd:#07051aee;--hf:'Orbitron',sans-serif;--abtn:linear-gradient(90deg,#00f0ff,#7a5cff);--on:#05051a;--hl:#00f0ff;--glow:#ff2bd677;--spot:#3a0e6b;--stg:#3a0e6b;--h1:linear-gradient(#aefaff,#ff2bd6)}
@@ -106,6 +107,8 @@ body[data-theme=galeri] .bulbs{display:none}
 .to{color:var(--hl)}
 .rpl{font-size:13px;color:var(--mu);margin-top:8px}
 .pdfv{width:100%;height:100%;overflow:auto;padding:8px;background:#444;align-self:stretch}
+.th.pdf,.th.ppt{background-position:center top}
+.th.has.pdf .play,.th.has.ppt .play{position:absolute;right:10px;bottom:10px;width:38px;height:38px;font-size:16px}
 </style>
 </head>
 <body data-theme="bioskop">
@@ -222,6 +225,15 @@ async function pdfView(url,box,token){
     if(token===sid)box.innerHTML=`<div style="padding:20px;text-align:center;color:#eee"><p style="margin-bottom:12px">PDF tidak bisa dimuat di sini.</p><a class="btn gold" target="_blank" rel="noopener" href="${esc(url)}">Buka PDF ↗</a></div>`;
   }
 }
+const cl=u=>u.includes('/image/upload/')?u.replace('/upload/','/upload/pg_1,w_600,f_jpg,q_auto/').replace(/\.pdf(\?.*)?$/i,'.jpg'):'';
+async function pptThumb(src){
+  try{
+    const buf=typeof src==='string'?await (await fetch(src)).arrayBuffer():await src.arrayBuffer();
+    const f=(await JSZip.loadAsync(buf)).file(/^docProps\/thumbnail\.jpe?g$/i)[0];
+    if(!f)return '';
+    return await up(new File([await f.async('blob')],'thumb.jpg',{type:'image/jpeg'}));
+  }catch(e){return ''}
+}
 async function up(file){
   const f=new FormData();f.append('file',file);f.append('upload_preset',PRESET);
   const r=await fetch(`https://api.cloudinary.com/v1_1/${CLOUD}/auto/upload`,{method:'POST',body:f});
@@ -231,8 +243,8 @@ async function up(file){
 
 function media(p){
   const u=p.url||'',R=(t,src,r,th)=>({t,src,r:r||1.78,th});let m;
-  if(p.kind==='pdf')return R('pdf',`https://docs.google.com/gview?url=${encodeURIComponent(u)}&embedded=true`,1.33);
-  if(p.kind==='ppt')return R('ppt',`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(u)}`);
+  if(p.kind==='pdf')return R('pdf',`https://docs.google.com/gview?url=${encodeURIComponent(u)}&embedded=true`,1.33,cl(u));
+  if(p.kind==='ppt')return R('ppt',`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(u)}`,0,p.thumb);
   if(m=u.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/))([\w-]{11})/))
     return R('yt',`https://www.youtube.com/embed/${m[1]}?rel=0`,m[0].includes('shorts')?.5625:1.78,`https://img.youtube.com/vi/${m[1]}/hqdefault.jpg`);
   if(m=u.match(/tiktok\.com\/.*\/video\/(\d+)/))return R('tt',`https://www.tiktok.com/embed/v2/${m[1]}`,.5625);
@@ -275,7 +287,7 @@ function renderHome(){look();
 
 function pcard(p,i){const fe=(rooms.find(x=>x.id===curRoom)||{}).feat;
   const m=media(p);
-  return `<article class="pc${fe&&p.featured?' pk':''}" data-a="focus" data-i="${i}"><div class="th ${m.t}" ${m.th?`style="background-image:url('${m.th}')"`:''}><span class="play">${ICON[m.t]}</span><b class="tag">${TAG[m.t]}</b>${fe&&p.featured?'<b class="tag pick">⭐ Pilihan</b>':''}</div>
+  return `<article class="pc${fe&&p.featured?' pk':''}" data-a="focus" data-i="${i}"><div class="th ${m.t}${m.th?' has':''}" ${m.th?`style="background-image:url('${m.th}')"`:''}><span class="play">${ICON[m.t]}</span><b class="tag">${TAG[m.t]}</b>${fe&&p.featured?'<b class="tag pick">⭐ Pilihan</b>':''}</div>
   <div class="pb"><h4>${esc(p.title)}</h4>${p.caption?`<p>${esc(p.caption)}</p>`:''}
   <div class="by"><i style="background:${col(p.name)}">${em(p.name)}</i>${esc(p.name)}${ctl(p,fe)}</div>${rxSum(p)?`<div class="rxs">${rxSum(p)}</div>`:''}</div></article>`;
 }
@@ -402,18 +414,18 @@ document.addEventListener('submit',async e=>{
   try{
     b.disabled=true;
     if(f.id==='uf'){
-      const rr=rooms.find(x=>x.id===f.dataset.rid);if(!admin&&rr&&!isOpen(rr))throw Error('Pengumpulan karya untuk room ini sudah ditutup.');const name=fd.get('name').trim();let kind,url;
+      const rr=rooms.find(x=>x.id===f.dataset.rid);if(!admin&&rr&&!isOpen(rr))throw Error('Pengumpulan karya untuk room ini sudah ditutup.');const name=fd.get('name').trim();let kind,url,thumb='';
       if(fd.get('k')==='file'){
         const file=fd.get('f');if(!file.size)throw Error('Pilih file dulu.');
         const ext=file.name.split('.').pop().toLowerCase();
         if(!['pdf','ppt','pptx'].includes(ext))throw Error('Hanya file PDF, PPT, atau PPTX.');
         if(file.size>10*1048576)throw Error('Ukuran file maksimal 10 MB.');
-        st.textContent='Mengunggah…';url=await up(file);kind=ext==='pdf'?'pdf':'ppt';
+        st.textContent='Mengunggah…';url=await up(file);kind=ext==='pdf'?'pdf':'ppt';if(ext==='pptx'){st.textContent='Membuat sampul…';thumb=await pptThumb(file)}
       }else{
         url=fd.get('u').trim();if(!/^https?:\/\//.test(url))throw Error('Link harus diawali https://');kind='link';
       }
       myName=name;localStorage.af_name=name;
-      await addDoc(collection(db,'posts'),{roomId:f.dataset.rid,name,title:fd.get('title').trim(),caption:fd.get('cap').trim(),kind,url,created:Date.now()});
+      await addDoc(collection(db,'posts'),{roomId:f.dataset.rid,name,title:fd.get('title').trim(),caption:fd.get('cap').trim(),kind,url,thumb,created:Date.now()});
       closeModal();toast('Karya terkirim!');
       if(curRoom!==f.dataset.rid)location.hash='#/r/'+f.dataset.rid;
     }else if(f.id==='rf'){
@@ -429,7 +441,7 @@ document.addEventListener('submit',async e=>{
       const p=posts.find(x=>x.id===f.dataset.id);if(!p)throw Error('Karya tidak ditemukan.');
       const d={title:fd.get('title').trim(),caption:fd.get('cap').trim()};
       if(p.kind==='link'){const u=fd.get('u').trim();if(!/^https?:\/\//.test(u))throw Error('Link harus diawali https://');d.url=u}
-      else{const file=fd.get('f');if(file&&file.size){const ext=chkF(file);st.textContent='Mengunggah…';d.url=await up(file);d.kind=ext==='pdf'?'pdf':'ppt'}}
+      else{const file=fd.get('f');if(file&&file.size){const ext=chkF(file);st.textContent='Mengunggah…';d.url=await up(file);d.kind=ext==='pdf'?'pdf':'ppt';d.thumb=ext==='pptx'?await pptThumb(file):''}else if(p.kind==='ppt'&&!p.thumb){st.textContent='Membuat sampul…';const th=await pptThumb(p.url);if(th)d.thumb=th}}
       if(!admin)d.editOpen=false;
       await updateDoc(doc(db,'posts',p.id),d);closeModal();toast('Karya diperbarui');
     }else if(f.id==='tf'){await setDoc(doc(db,'config','site'),{theme:fd.get('theme')});closeModal();toast('Tema dashboard diganti');}else if(f.id==='pf'){
