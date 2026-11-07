@@ -163,8 +163,8 @@ const closeModal=()=>{$('#modal').hidden=true;look()};
 
 let rooms=[],posts=[],curRoom=null,fi=0,sid=null,uPosts=null,uCom=null,site='bioskop',sig='',q='',ft='all',view=[],replyTo=null,replyName='',comList=[];
 let admin=sessionStorage.af_admin==='1',myName=localStorage.af_name||'';
-const TAG={yt:'YouTube',tt:'TikTok',ig:'Instagram',pdf:'Dokumen',ppt:'Presentasi',link:'Link'};
-const ICON={yt:'▶',tt:'♪',ig:'◎',pdf:'📄',ppt:'📊',link:'🔗'};
+const TAG={yt:'YouTube',tt:'TikTok',ig:'Instagram',pdf:'Dokumen',ppt:'Presentasi',link:'Link',video:'Video'};
+const ICON={yt:'▶',tt:'♪',ig:'◎',pdf:'📄',ppt:'📊',link:'🔗',video:'▶'};
 
 const THEMES={bioskop:'🎬 Bioskop',neon:'🕹 Neon Arcade',galeri:'🖼 Galeri Museum',angkasa:'🚀 Angkasa',alam:'🌿 Hutan'};
 const themeOpts=(v,inh)=>(inh?`<option value="">Ikuti tema dashboard</option>`:'')+Object.entries(THEMES).map(([k,n])=>`<option value="${k}"${k===v?' selected':''}>${n}</option>`).join('');
@@ -190,9 +190,9 @@ async function react(k){
   localStorage.af_rx=JSON.stringify(m);
   await updateDoc(doc(db,'posts',sid),u);
 }
-const chkF=file=>{const ext=file.name.split('.').pop().toLowerCase();if(!['pdf','ppt','pptx'].includes(ext))throw Error('Hanya file PDF, PPT, atau PPTX.');if(file.size>10*1048576)throw Error('Ukuran file maksimal 10 MB.');return ext};
+const chkF=file=>{const ext=file.name.split('.').pop().toLowerCase();if(!['pdf','ppt','pptx','mp4','mov','webm','m4v'].includes(ext))throw Error('Format tidak didukung (PDF, PPT, PPTX, MP4, MOV, WEBM).');if(file.size>(isV(ext)?100:10)*1048576)throw Error(isV(ext)?'Video maksimal 100 MB.':'Ukuran file maksimal 10 MB.');return ext};
 const ctl=(p,fe)=>`<span class="ctl">${admin&&fe?`<button class="ic" data-a="star" data-id="${p.id}" title="Karya pilihan">${p.featured?'⭐':'☆'}</button>`:''}${admin?`<button class="ic" data-a="unlock" data-id="${p.id}" title="Izinkan siswa edit/hapus">${p.editOpen?'🔓':'🔒'}</button>`:''}${admin||p.editOpen?`<button class="ic" data-a="editpost" data-id="${p.id}" title="Edit">✏️</button><button class="ic" data-a="delpost" data-id="${p.id}" title="Hapus">🗑</button>`:''}</span>`;
-const editModal=p=>modal(`<h3>Edit karya</h3><form id="ef" data-id="${p.id}"><label>Judul<input name="title" required maxlength="80" value="${esc(p.title)}"></label><label>Caption<textarea name="cap" rows="2" maxlength="300">${esc(p.caption)}</textarea></label>${p.kind==='link'?`<label>Link<input name="u" value="${esc(p.url)}"></label>`:`<label>Ganti file (opsional, maks 10 MB)<input type="file" name="f" accept=".pdf,.ppt,.pptx"></label>`}<div class="row"><button class="btn gold">Simpan</button><button type="button" class="btn" data-a="cm">Batal</button></div><p class="st"></p></form>`);
+const editModal=p=>modal(`<h3>Edit karya</h3><form id="ef" data-id="${p.id}"><label>Judul<input name="title" required maxlength="80" value="${esc(p.title)}"></label><label>Caption<textarea name="cap" rows="2" maxlength="300">${esc(p.caption)}</textarea></label>${p.kind==='link'?`<label>Link<input name="u" value="${esc(p.url)}"></label>`:`<label>Ganti file (opsional, maks 10 MB)<input type="file" name="f" accept=".pdf,.ppt,.pptx,.mp4,.mov,.webm,.m4v"></label>`}<div class="row"><button class="btn gold">Simpan</button><button type="button" class="btn" data-a="cm">Batal</button></div><p class="st"></p></form>`);
 function qrModal(id){
   const r=rooms.find(x=>x.id===id),u=location.href.split('#')[0]+'#/r/'+id;
   modal(`<h3>Kode QR</h3><p style="color:var(--mu);margin:6px 0 12px">${esc(r?.name)}</p><div id="qr" style="background:#fff;padding:14px;border-radius:12px;display:inline-block"></div><p class="st" style="word-break:break-all">${esc(u)}</p><div class="row"><button class="btn gold" data-a="dlqr">Unduh PNG</button><button class="btn" data-a="cm">Tutup</button></div>`);
@@ -202,7 +202,7 @@ function clearReply(){replyTo=null;replyName='';$('#rpl').hidden=true}
 function drawWall(){
   const r=rooms.find(x=>x.id===curRoom)||{},t=q.trim().toLowerCase();
   view=posts.filter(p=>{const m=media(p).t;
-    return (ft==='all'||(ft==='video'?['yt','tt','ig'].includes(m):m===ft))&&(!t||(p.title+' '+p.name+' '+(p.caption||'')).toLowerCase().includes(t))})
+    return (ft==='all'||(ft==='video'?['yt','tt','ig','video'].includes(m):m===ft))&&(!t||(p.title+' '+p.name+' '+(p.caption||'')).toLowerCase().includes(t))})
    .sort((a,b)=>(r.feat?(b.featured?1:0)-(a.featured?1:0):0)||b.created-a.created);
   $('#wall').innerHTML=view.map(pcard).join('')||`<p class="empty">${posts.length?'Tidak ada karya yang cocok.':'Belum ada karya. Jadilah yang pertama mengirim!'}</p>`;
   $('#cnt').textContent=view.length+' dari '+posts.length+' karya';
@@ -225,6 +225,9 @@ async function pdfView(url,box,token){
     if(token===sid)box.innerHTML=`<div style="padding:20px;text-align:center;color:#eee"><p style="margin-bottom:12px">PDF tidak bisa dimuat di sini.</p><a class="btn gold" target="_blank" rel="noopener" href="${esc(url)}">Buka PDF ↗</a></div>`;
   }
 }
+const isV=e=>['mp4','mov','webm','m4v'].includes(e),kindOf=e=>e==='pdf'?'pdf':isV(e)?'video':'ppt';
+const vth=u=>u.includes('/video/upload/')?u.replace('/upload/','/upload/so_0,w_600,f_jpg,q_auto/').replace(/\.\w+(\?.*)?$/,'.jpg'):'';
+const vsrc=u=>u.replace('/video/upload/','/video/upload/f_auto,vc_auto,q_auto/');
 const cl=u=>u.includes('/image/upload/')?u.replace('/upload/','/upload/pg_1,w_600,f_jpg,q_auto/').replace(/\.pdf(\?.*)?$/i,'.jpg'):'';
 async function pptThumb(src){
   try{
@@ -243,6 +246,7 @@ async function up(file){
 
 function media(p){
   const u=p.url||'',R=(t,src,r,th)=>({t,src,r:r||1.78,th});let m;
+  if(p.kind==='video')return R('video',vsrc(u),1.78,vth(u));
   if(p.kind==='pdf')return R('pdf',`https://docs.google.com/gview?url=${encodeURIComponent(u)}&embedded=true`,1.33,cl(u));
   if(p.kind==='ppt')return R('ppt',`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(u)}`,0,p.thumb);
   if(m=u.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/))([\w-]{11})/))
@@ -321,6 +325,8 @@ function renderStage(){
   s.innerHTML=m.src?`<iframe src="${esc(m.src)}" allow="autoplay;encrypted-media;fullscreen;picture-in-picture" allowfullscreen></iframe>`
    :`<div style="padding:20px;text-align:center"><p style="margin-bottom:12px">Link ini tidak bisa diputar langsung di sini.</p><a class="btn gold" target="_blank" rel="noopener" href="${esc(p.url)}">Buka link ↗</a></div>`;
   if(p.kind==='pdf'){s.innerHTML='<div class="pdfv"></div>';pdfView(p.url,s.firstChild,p.id)}
+  if(p.kind==='video')s.innerHTML=`<video src="${esc(vsrc(p.url))}" controls playsinline preload="metadata" style="width:100%;height:100%;background:#000"></video>`;
+  if(m.t==='tt'){s.style.setProperty('--r',1.4);s.innerHTML=`<div style="padding:20px;text-align:center"><div style="font-size:42px">♪</div><p style="margin:8px 0 16px;color:#ddd">Video TikTok dibuka di jendela terpisah supaya lancar.</p><div class="row" style="justify-content:center"><button class="btn gold" data-a="ttpop">▶ Tonton</button><button class="btn" data-a="ttfull">⛶ Layar penuh</button></div><p style="margin-top:14px"><button class="lnk" data-a="ttembed">Coba pemutar tersemat</button></p></div>`}
   $('#meta').innerHTML=`<h2>${esc(p.title)}</h2>${p.caption?`<p>${esc(p.caption)}</p>`:''}
   <div class="by" style="justify-content:center"><i style="background:${col(p.name)}">${em(p.name)}</i>${esc(p.name)} · ${fi+1}/${view.length} · <a target="_blank" rel="noopener" href="${esc(p.url)}">Buka asli ↗</a></div>${m.t==='tt'||m.t==='ig'?`<p style="margin-top:8px;font-size:13px">Pemutar tidak muncul? <button class="lnk" data-a="reload">↻ Muat ulang</button> atau buka link asli.</p>`:''}`;
   uCom&&uCom();
@@ -339,8 +345,8 @@ const upModal=rid=>modal(`<h3>Kirim karya</h3><form id="uf" data-rid="${rid}">
 <label>Nama<input name="name" required maxlength="30" value="${esc(myName)}"></label>
 <label>Judul project<input name="title" required maxlength="80"></label>
 <label>Caption<textarea name="cap" rows="2" maxlength="300"></textarea></label>
-<label>Jenis<select name="k"><option value="file">File PDF / PPT</option><option value="link">Link video (YouTube, TikTok, Instagram)</option></select></label>
-<label class="fg">File (maks 10 MB)<input type="file" name="f" accept=".pdf,.ppt,.pptx"></label>
+<label>Jenis<select name="k"><option value="file">File PDF / PPT / Video (mp4)</option><option value="link">Link video (YouTube, TikTok, Instagram)</option></select></label>
+<label class="fg">File (PDF/PPT maks 10 MB, video maks 100 MB)<input type="file" name="f" accept=".pdf,.ppt,.pptx,.mp4,.mov,.webm,.m4v"></label>
 <label class="lg" hidden>Link<input name="u" placeholder="https://"></label>
 <div class="row"><button class="btn gold">Kirim</button><button type="button" class="btn" data-a="cm">Batal</button></div><p class="st"></p></form>`);
 
@@ -376,6 +382,12 @@ document.addEventListener('click',async e=>{
     else if(a==='close')closeStage();
     else if(a==='rx')react(k);
     else if(a==='reload'){const f=$('#screen iframe');if(f)f.src=f.src}
+    else if(a==='ttpop'||a==='ttfull'){
+      const full=a==='ttfull',w=full?screen.availWidth:430,h=full?screen.availHeight:Math.min(screen.availHeight,860);
+      const win=window.open(view[fi].url,'ttwin',`popup=yes,width=${w},height=${h},left=${full?0:Math.round((screen.availWidth-w)/2)},top=${full?0:20}`);
+      if(!win)toast('Pop-up diblokir. Izinkan pop-up atau pakai Buka asli.');else win.focus();
+    }
+    else if(a==='ttembed'){const m=media(view[fi]);$('#screen').style.setProperty('--r',m.r);$('#screen').innerHTML=`<iframe src="${esc(m.src)}" allow="autoplay;encrypted-media;fullscreen" allowfullscreen></iframe>`}
     else if(a==='ft'){ft=k;document.querySelectorAll('.chp').forEach(b=>b.classList.toggle('on',b.dataset.k===k));drawWall()}
     else if(a==='qr')qrModal(id||curRoom);
     else if(a==='dlqr'){const c=$('#qr canvas');if(c){const l=document.createElement('a');l.href=c.toDataURL('image/png');l.download='qr-room.png';l.click()}}
@@ -419,9 +431,9 @@ document.addEventListener('submit',async e=>{
       if(fd.get('k')==='file'){
         const file=fd.get('f');if(!file.size)throw Error('Pilih file dulu.');
         const ext=file.name.split('.').pop().toLowerCase();
-        if(!['pdf','ppt','pptx'].includes(ext))throw Error('Hanya file PDF, PPT, atau PPTX.');
-        if(file.size>10*1048576)throw Error('Ukuran file maksimal 10 MB.');
-        st.textContent='Mengunggah…';url=await up(file);kind=ext==='pdf'?'pdf':'ppt';if(ext==='pptx'){st.textContent='Membuat sampul…';thumb=await pptThumb(file)}
+        if(!['pdf','ppt','pptx','mp4','mov','webm','m4v'].includes(ext))throw Error('Format tidak didukung (PDF, PPT, PPTX, MP4, MOV, WEBM).');
+        if(file.size>(isV(ext)?100:10)*1048576)throw Error(isV(ext)?'Video maksimal 100 MB.':'Ukuran file maksimal 10 MB.');
+        st.textContent='Mengunggah…';url=await up(file);kind=kindOf(ext);if(ext==='pptx'){st.textContent='Membuat sampul…';thumb=await pptThumb(file)}
       }else{
         url=fd.get('u').trim();if(!/^https?:\/\//.test(url))throw Error('Link harus diawali https://');kind='link';
       }
@@ -442,7 +454,7 @@ document.addEventListener('submit',async e=>{
       const p=posts.find(x=>x.id===f.dataset.id);if(!p)throw Error('Karya tidak ditemukan.');
       const d={title:fd.get('title').trim(),caption:fd.get('cap').trim()};
       if(p.kind==='link'){const u=fd.get('u').trim();if(!/^https?:\/\//.test(u))throw Error('Link harus diawali https://');d.url=u}
-      else{const file=fd.get('f');if(file&&file.size){const ext=chkF(file);st.textContent='Mengunggah…';d.url=await up(file);d.kind=ext==='pdf'?'pdf':'ppt';d.thumb=ext==='pptx'?await pptThumb(file):''}else if(p.kind==='ppt'&&!p.thumb){st.textContent='Membuat sampul…';const th=await pptThumb(p.url);if(th)d.thumb=th}}
+      else{const file=fd.get('f');if(file&&file.size){const ext=chkF(file);st.textContent='Mengunggah…';d.url=await up(file);d.kind=kindOf(ext);d.thumb=ext==='pptx'?await pptThumb(file):''}else if(p.kind==='ppt'&&!p.thumb){st.textContent='Membuat sampul…';const th=await pptThumb(p.url);if(th)d.thumb=th}}
       if(!admin)d.editOpen=false;
       await updateDoc(doc(db,'posts',p.id),d);closeModal();toast('Karya diperbarui');
     }else if(f.id==='tf'){await setDoc(doc(db,'config','site'),{theme:fd.get('theme')});closeModal();toast('Tema dashboard diganti');}else if(f.id==='pf'){
