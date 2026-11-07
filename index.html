@@ -322,7 +322,7 @@ function renderStage(){
    :`<div style="padding:20px;text-align:center"><p style="margin-bottom:12px">Link ini tidak bisa diputar langsung di sini.</p><a class="btn gold" target="_blank" rel="noopener" href="${esc(p.url)}">Buka link ↗</a></div>`;
   if(p.kind==='pdf'){s.innerHTML='<div class="pdfv"></div>';pdfView(p.url,s.firstChild,p.id)}
   $('#meta').innerHTML=`<h2>${esc(p.title)}</h2>${p.caption?`<p>${esc(p.caption)}</p>`:''}
-  <div class="by" style="justify-content:center"><i style="background:${col(p.name)}">${em(p.name)}</i>${esc(p.name)} · ${fi+1}/${view.length} · <a target="_blank" rel="noopener" href="${esc(p.url)}">Buka asli ↗</a></div>`;
+  <div class="by" style="justify-content:center"><i style="background:${col(p.name)}">${em(p.name)}</i>${esc(p.name)} · ${fi+1}/${view.length} · <a target="_blank" rel="noopener" href="${esc(p.url)}">Buka asli ↗</a></div>${m.t==='tt'||m.t==='ig'?`<p style="margin-top:8px;font-size:13px">Pemutar tidak muncul? <button class="lnk" data-a="reload">↻ Muat ulang</button> atau buka link asli.</p>`:''}`;
   uCom&&uCom();
   uCom=onSnapshot(query(collection(db,'comments'),where('postId','==',p.id)),s=>{
     comList=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>a.created-b.created);const c=$('#clist');
@@ -375,6 +375,7 @@ document.addEventListener('click',async e=>{
     else if(a==='focus'){if(!view.length)return toast('Belum ada karya');openStage(+i)}
     else if(a==='close')closeStage();
     else if(a==='rx')react(k);
+    else if(a==='reload'){const f=$('#screen iframe');if(f)f.src=f.src}
     else if(a==='ft'){ft=k;document.querySelectorAll('.chp').forEach(b=>b.classList.toggle('on',b.dataset.k===k));drawWall()}
     else if(a==='qr')qrModal(id||curRoom);
     else if(a==='dlqr'){const c=$('#qr canvas');if(c){const l=document.createElement('a');l.href=c.toDataURL('image/png');l.download='qr-room.png';l.click()}}
