@@ -181,7 +181,7 @@ function look(){
 }
 function rerender(){curRoom?renderRoom():renderHome()}
 const RX={l:'❤️',c:'👏',f:'🔥',w:'😮',s:'💡'};
-const CH=[['all','Semua'],['video','🎬 Video'],['ppt','📊 PPT'],['pdf','📄 PDF'],['link','🔗 Link lain']];
+const CH=[['all','Semua'],['video','🎬 Video'],['doc','📄 Dokumen & PPT'],['link','🔗 Link lain']];
 const rxSum=p=>Object.entries(RX).filter(([k])=>(p.rx||{})[k]>0).map(([k,e])=>e+' '+p.rx[k]).join('  ');
 const rxBar=p=>{const m=JSON.parse(localStorage.af_rx||'{}')[p.id];return Object.entries(RX).map(([k,e])=>`<button class="rb${m===k?' on':''}" data-a="rx" data-k="${k}">${e} <b>${(p.rx||{})[k]||0}</b></button>`).join('')};
 async function react(k){
@@ -190,9 +190,9 @@ async function react(k){
   localStorage.af_rx=JSON.stringify(m);
   await updateDoc(doc(db,'posts',sid),u);
 }
-const chkF=file=>{const ext=file.name.split('.').pop().toLowerCase();if(!['pdf','ppt','pptx','mp4','mov','webm','m4v'].includes(ext))throw Error('Format tidak didukung (PDF, PPT, PPTX, MP4, MOV, WEBM).');if(file.size>(isV(ext)?100:10)*1048576)throw Error(isV(ext)?'Video maksimal 100 MB.':'Ukuran file maksimal 10 MB.');return ext};
+const chkF=file=>{const ext=file.name.split('.').pop().toLowerCase();if(!['pdf','ppt','pptx'].includes(ext))throw Error('Hanya file PDF, PPT, atau PPTX. Video harus lewat link.');if(file.size>10*1048576)throw Error('Ukuran file maksimal 10 MB.');return ext};
 const ctl=(p,fe)=>`<span class="ctl">${admin&&fe?`<button class="ic" data-a="star" data-id="${p.id}" title="Karya pilihan">${p.featured?'⭐':'☆'}</button>`:''}${admin?`<button class="ic" data-a="unlock" data-id="${p.id}" title="Izinkan siswa edit/hapus">${p.editOpen?'🔓':'🔒'}</button>`:''}${admin||p.editOpen?`<button class="ic" data-a="editpost" data-id="${p.id}" title="Edit">✏️</button><button class="ic" data-a="delpost" data-id="${p.id}" title="Hapus">🗑</button>`:''}</span>`;
-const editModal=p=>modal(`<h3>Edit karya</h3><form id="ef" data-id="${p.id}"><label>Judul<input name="title" required maxlength="80" value="${esc(p.title)}"></label><label>Caption<textarea name="cap" rows="2" maxlength="300">${esc(p.caption)}</textarea></label>${p.kind==='link'?`<label>Link<input name="u" value="${esc(p.url)}"></label>`:`<label>Ganti file (opsional, maks 10 MB)<input type="file" name="f" accept=".pdf,.ppt,.pptx,.mp4,.mov,.webm,.m4v"></label>`}<div class="row"><button class="btn gold">Simpan</button><button type="button" class="btn" data-a="cm">Batal</button></div><p class="st"></p></form>`);
+const editModal=p=>modal(`<h3>Edit karya</h3><form id="ef" data-id="${p.id}"><label>Judul<input name="title" required maxlength="80" value="${esc(p.title)}"></label><label>Caption<textarea name="cap" rows="2" maxlength="300">${esc(p.caption)}</textarea></label>${p.kind==='link'?`<label>Link<input name="u" value="${esc(p.url)}"></label>`:`<label>Ganti file (opsional, maks 10 MB)<input type="file" name="f" accept=".pdf,.ppt,.pptx${V(p.roomId)?',.mp4,.mov,.webm,.m4v':''}"></label>`}<div class="row"><button class="btn gold">Simpan</button><button type="button" class="btn" data-a="cm">Batal</button></div><p class="st"></p></form>`);
 function qrModal(id){
   const r=rooms.find(x=>x.id===id),u=location.href.split('#')[0]+'#/r/'+id;
   modal(`<h3>Kode QR</h3><p style="color:var(--mu);margin:6px 0 12px">${esc(r?.name)}</p><div id="qr" style="background:#fff;padding:14px;border-radius:12px;display:inline-block"></div><p class="st" style="word-break:break-all">${esc(u)}</p><div class="row"><button class="btn gold" data-a="dlqr">Unduh PNG</button><button class="btn" data-a="cm">Tutup</button></div>`);
@@ -202,7 +202,7 @@ function clearReply(){replyTo=null;replyName='';$('#rpl').hidden=true}
 function drawWall(){
   const r=rooms.find(x=>x.id===curRoom)||{},t=q.trim().toLowerCase();
   view=posts.filter(p=>{const m=media(p).t;
-    return (ft==='all'||(ft==='video'?['yt','tt','ig','video'].includes(m):m===ft))&&(!t||(p.title+' '+p.name+' '+(p.caption||'')).toLowerCase().includes(t))})
+    return (ft==='all'||(ft==='video'?['yt','tt','ig','video'].includes(m):ft==='doc'?['pdf','ppt'].includes(m):m===ft))&&(!t||(p.title+' '+p.name+' '+(p.caption||'')).toLowerCase().includes(t))})
    .sort((a,b)=>(r.feat?(b.featured?1:0)-(a.featured?1:0):0)||b.created-a.created);
   $('#wall').innerHTML=view.map(pcard).join('')||`<p class="empty">${posts.length?'Tidak ada karya yang cocok.':'Belum ada karya. Jadilah yang pertama mengirim!'}</p>`;
   $('#cnt').textContent=view.length+' dari '+posts.length+' karya';
@@ -224,6 +224,12 @@ async function pdfView(url,box,token){
   }catch(e){
     if(token===sid)box.innerHTML=`<div style="padding:20px;text-align:center;color:#eee"><p style="margin-bottom:12px">PDF tidak bisa dimuat di sini.</p><a class="btn gold" target="_blank" rel="noopener" href="${esc(url)}">Buka PDF ↗</a></div>`;
   }
+}
+const V=()=>false;
+async function sniff(file,ext){
+  const h=[...new Uint8Array(await file.slice(0,4).arrayBuffer())].map(x=>x.toString(16).padStart(2,'0')).join('');
+  const ok=ext==='pdf'?h==='25504446':ext==='pptx'?h==='504b0304':h==='d0cf11e0';
+  if(!ok)throw Error('Isi file bukan PDF/PPT asli. Video tidak boleh diunggah, gunakan link.');
 }
 const isV=e=>['mp4','mov','webm','m4v'].includes(e),kindOf=e=>e==='pdf'?'pdf':isV(e)?'video':'ppt';
 const vth=u=>u.includes('/video/upload/')?u.replace('/upload/','/upload/so_0,w_600,f_jpg,q_auto/').replace(/\.\w+(\?.*)?$/,'.jpg'):'';
@@ -345,8 +351,8 @@ const upModal=rid=>modal(`<h3>Kirim karya</h3><form id="uf" data-rid="${rid}">
 <label>Nama<input name="name" required maxlength="30" value="${esc(myName)}"></label>
 <label>Judul project<input name="title" required maxlength="80"></label>
 <label>Caption<textarea name="cap" rows="2" maxlength="300"></textarea></label>
-<label>Jenis<select name="k"><option value="file">File PDF / PPT / Video (mp4)</option><option value="link">Link video (YouTube, TikTok, Instagram)</option></select></label>
-<label class="fg">File (PDF/PPT maks 10 MB, video maks 100 MB)<input type="file" name="f" accept=".pdf,.ppt,.pptx,.mp4,.mov,.webm,.m4v"></label>
+<label>Jenis<select name="k"><option value="file">File PDF / PPT${V(rid)?' / Video':''}</option><option value="link">Link video (YouTube, TikTok, Instagram)</option></select></label>
+<label class="fg">File (PDF/PPT maks 10 MB${V(rid)?', video maks 100 MB':''})<input type="file" name="f" accept=".pdf,.ppt,.pptx${V(rid)?',.mp4,.mov,.webm,.m4v':''}"></label>
 <label class="lg" hidden>Link<input name="u" placeholder="https://"></label>
 <div class="row"><button class="btn gold">Kirim</button><button type="button" class="btn" data-a="cm">Batal</button></div><p class="st"></p></form>`);
 
@@ -431,9 +437,9 @@ document.addEventListener('submit',async e=>{
       if(fd.get('k')==='file'){
         const file=fd.get('f');if(!file.size)throw Error('Pilih file dulu.');
         const ext=file.name.split('.').pop().toLowerCase();
-        if(!['pdf','ppt','pptx','mp4','mov','webm','m4v'].includes(ext))throw Error('Format tidak didukung (PDF, PPT, PPTX, MP4, MOV, WEBM).');
-        if(file.size>(isV(ext)?100:10)*1048576)throw Error(isV(ext)?'Video maksimal 100 MB.':'Ukuran file maksimal 10 MB.');
-        st.textContent='Mengunggah…';url=await up(file);kind=kindOf(ext);if(ext==='pptx'){st.textContent='Membuat sampul…';thumb=await pptThumb(file)}
+        if(!['pdf','ppt','pptx'].includes(ext))throw Error('Hanya file PDF, PPT, atau PPTX. Video harus lewat link.');
+        if(file.size>10*1048576)throw Error('Ukuran file maksimal 10 MB.');
+        await sniff(file,ext);st.textContent='Mengunggah…';url=await up(file);kind=kindOf(ext);if(ext==='pptx'){st.textContent='Membuat sampul…';thumb=await pptThumb(file)}
       }else{
         url=fd.get('u').trim();if(!/^https?:\/\//.test(url))throw Error('Link harus diawali https://');kind='link';
       }
@@ -454,7 +460,7 @@ document.addEventListener('submit',async e=>{
       const p=posts.find(x=>x.id===f.dataset.id);if(!p)throw Error('Karya tidak ditemukan.');
       const d={title:fd.get('title').trim(),caption:fd.get('cap').trim()};
       if(p.kind==='link'){const u=fd.get('u').trim();if(!/^https?:\/\//.test(u))throw Error('Link harus diawali https://');d.url=u}
-      else{const file=fd.get('f');if(file&&file.size){const ext=chkF(file);st.textContent='Mengunggah…';d.url=await up(file);d.kind=kindOf(ext);d.thumb=ext==='pptx'?await pptThumb(file):''}else if(p.kind==='ppt'&&!p.thumb){st.textContent='Membuat sampul…';const th=await pptThumb(p.url);if(th)d.thumb=th}}
+      else{const file=fd.get('f');if(file&&file.size){const ext=chkF(file);await sniff(file,ext);st.textContent='Mengunggah…';d.url=await up(file);d.kind=kindOf(ext);d.thumb=ext==='pptx'?await pptThumb(file):''}else if(p.kind==='ppt'&&!p.thumb){st.textContent='Membuat sampul…';const th=await pptThumb(p.url);if(th)d.thumb=th}}
       if(!admin)d.editOpen=false;
       await updateDoc(doc(db,'posts',p.id),d);closeModal();toast('Karya diperbarui');
     }else if(f.id==='tf'){await setDoc(doc(db,'config','site'),{theme:fd.get('theme')});closeModal();toast('Tema dashboard diganti');}else if(f.id==='pf'){
